@@ -1,4 +1,6 @@
 /* jslint node: true */
+"use strict";
+
 var assert = require("assert");
 var bq = require('../index.js');
 
