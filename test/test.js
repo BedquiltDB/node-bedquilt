@@ -1,14 +1,14 @@
 /* jslint node: true */
 "use strict";
 
-var assert = require("assert");
+var should = require("should");
 var bq = require('../index.js');
 
 describe('Basic test', function() {
   describe('#BedquiltClient()', function() {
     it('should return 1', function() {
       var client = new bq.BedquiltClient("a");
-      assert.notEqual(client, null);
+      should.notEqual(client, null);
     });
   });
 });
