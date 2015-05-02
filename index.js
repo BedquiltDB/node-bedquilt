@@ -3,26 +3,16 @@
 
 var pg = require('pg');
 
-var BedquiltClient = function(connectionString) {
-  this.connectionString = connectionString;
-  this._query = function(collectionName, queryDoc) {
-    // pass
-  };
-  this.collection = function(collectionName) {
-    return new BedquiltCollection(this, collectionName);
-  };
-  this.listCollections = function() {
-    // pass
-  };
+function BedquiltClient() {
+
+
 };
 
-var BedquiltCollection = function(client, collectionName) {
-  this.client = client;
-  this.collectionName = collectionName;
-  this._query = function(queryDoc) {
-    // pass
+BedquiltClient.connect = function(connectionString, callback) {
+  var db = {
+    connectionString: connectionString
   };
+  callback(null, db);
 };
 
 exports.BedquiltClient = BedquiltClient;
-exports.BedquiltCollection = BedquiltCollection;
