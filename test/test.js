@@ -21,7 +21,8 @@ describe('Basic test', function() {
     it('should allow us to query', function() {
       bq.BedquiltClient.connect(testutils.connectionString, function(err, db) {
         db._query('things', {}, function(err, result) {
-          should.notEqual(result, null);
+          should.equal(err, null);
+          should.equal(result, 1);
         });
       });
     });

@@ -12,6 +12,19 @@ BedquiltClient.connect = function(connectionString, callback) {
       return new BedquiltCollection(this, collectionName);
     },
     _query: function(collectionName, queryDoc, callback) {
+      pg.connect(this.connectionString, function(err, client, done) {
+        if(err) {
+          return callback(err, null);
+        }
+        client.query('select 1;', [], function(err, result) {
+          done();
+          if(err) {
+            return callback(err, null);
+          }
+          return callback(null, result);
+        });
+        return null;
+      });
       return callback(null, true);
     }
   };
