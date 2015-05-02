@@ -12,7 +12,7 @@ BedquiltClient.connect = function(connectionString, callback) {
       return new BedquiltCollection(this, collectionName);
     },
     _query: function(collectionName, queryDoc, callback) {
-      return callback(null, null);
+      return callback(null, true);
     }
   };
   callback(null, db);
