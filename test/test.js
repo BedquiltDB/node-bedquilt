@@ -8,18 +8,20 @@ var testutils = require('./testutils.js');
 
 var _cs = testutils.connectionString;
 
+var _cleanup = function(done) {
+  testutils.cleanDatabase(function(err, result) {
+    if(err) {
+      throw err;
+    }
+    done();
+  });
+};
+
 describe('Basic test', function() {
 
-  describe('#BedquiltClient.connect()', function() {
+  describe('BedquiltClient#connect()', function() {
 
-    beforeEach(function(done) {
-      testutils.cleanDatabase(function(err, result) {
-        if(err) {
-          throw err;
-        }
-        done();
-      });
-    });
+    beforeEach(_cleanup);
 
     it('should connect', function(done) {
       BedquiltClient.connect(_cs, function(err, db) {
@@ -30,6 +32,9 @@ describe('Basic test', function() {
       });
     });
 
+  });
+
+  describe('BedquiltClient#query', function() {
     it('should allow us to query', function(done) {
       BedquiltClient.connect(_cs, function(err, db) {
         db._query('select 1 as num', [], function(err, result) {
@@ -40,15 +45,21 @@ describe('Basic test', function() {
       });
     });
 
-    it('should list collections', function(done) {
+  });
+
+  describe('BedquiltClien#listCollections', function() {
+    it('should return 0 when there are no collections', function(done) {
       // with no collections
       BedquiltClient.connect(_cs, function(err, db) {
         db.listCollections(function(err, result) {
           should.equal(err, null);
           should.equal(result.length, 0);
+          done();
         });
       });
-      // with one collection
+    });
+
+    it('should return 1 when there is one collection', function(done) {
       BedquiltClient.connect(_cs, function(err, db) {
         db.listCollections(function(err, result) {
           should.equal(err, null);
@@ -65,6 +76,7 @@ describe('Basic test', function() {
         });
       });
     });
-  });
 
+
+  });
 });
