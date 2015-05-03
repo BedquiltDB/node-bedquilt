@@ -31,9 +31,10 @@ BedquiltClient.connect = function(connectionString, callback) {
         if(err) {
           return callback(err, null);
         } else {
-          return callback(
-            null,
-            result.rows.map(function(row) { return row['bq_list_collections']; }));
+          var collections = result.rows.map(function(row) {
+            return row['bq_list_collections'];
+          });
+          return callback(null, collections);
         }
       });
     }
