@@ -8,9 +8,11 @@ function BedquiltClient() {};
 BedquiltClient.connect = function(connectionString, callback) {
   var db = {
     connectionString: connectionString,
+
     collection: function(collectionName) {
       return new BedquiltCollection(this, collectionName);
     },
+
     _query: function(queryString, params, callback) {
       pg.connect(this.connectionString, function(err, client, done) {
         if(err) {
@@ -26,6 +28,7 @@ BedquiltClient.connect = function(connectionString, callback) {
         return null;
       });
     },
+
     listCollections: function(callback) {
       return this._query('select bq_list_collections();', [], function(err, result) {
         if(err) {
@@ -39,7 +42,8 @@ BedquiltClient.connect = function(connectionString, callback) {
       });
     }
   };
-  callback(null, db);
+
+  return callback(null, db);
 };
 
 function BedquiltCollection(db, collectionName) {
