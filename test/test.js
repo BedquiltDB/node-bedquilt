@@ -23,7 +23,6 @@ describe('Basic test', function() {
     beforeEach(_cleanup);
     afterEach(_cleanup);
 
-
     it('should connect', function(done) {
       BedquiltClient.connect(_cs, function(err, db) {
         should.equal(err, null);
@@ -98,7 +97,6 @@ describe('Basic test', function() {
         });
       });
     });
-
 
   });
 });
