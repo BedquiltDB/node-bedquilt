@@ -86,7 +86,10 @@ describe('Basic test', function() {
           db.deleteCollection('stuff', function(err, deleted) {
             should.equal(err, null);
             should.equal(deleted, true);
-            done();
+            db.deleteCollection('stuff', function(err, deleted) {
+              should.equal(deleted, false);
+              done();
+            });
           });
         });
       });
