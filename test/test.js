@@ -35,6 +35,7 @@ describe('Basic test', function() {
   });
 
   describe('BedquiltClient#query', function() {
+    beforeEach(_cleanup);
     it('should allow us to query', function(done) {
       BedquiltClient.connect(_cs, function(err, db) {
         db._query('select 1 as num', [], function(err, result) {
@@ -47,7 +48,21 @@ describe('Basic test', function() {
 
   });
 
+  describe('BedquiltClient#createCollection', function() {
+    beforeEach(_cleanup);
+    it('should create a collection', function(done) {
+      BedquiltClient.connect(_cs, function(err, db) {
+        db.createCollection('stuff', function(err, created) {
+          should.equal(err, null);
+          should.equal(created, true);
+          done();
+        });
+      });
+    });
+  });
+
   describe('BedquiltClien#listCollections', function() {
+    beforeEach(_cleanup);
     it('should return 0 when there are no collections', function(done) {
       // with no collections
       BedquiltClient.connect(_cs, function(err, db) {
