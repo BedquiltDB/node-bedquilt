@@ -27,7 +27,15 @@ BedquiltClient.connect = function(connectionString, callback) {
       });
     },
     listCollections: function(callback) {
-      return this._query('select bq_list_collections();', [], callback);
+      return this._query('select bq_list_collections();', [], function(err, result) {
+        if(err) {
+          return callback(err, null);
+        } else {
+          return callback(
+            null,
+            result.rows.map(function(row) { return row['bq_list_collections']; }));
+        }
+      });
     }
   };
   callback(null, db);

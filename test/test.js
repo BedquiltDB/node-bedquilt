@@ -11,6 +11,15 @@ describe('Basic test', function() {
 
   describe('#BedquiltClient.connect()', function() {
 
+    beforeEach(function(done) {
+      testutils.cleanDatabase(function(err, result) {
+        if(err) {
+          throw err;
+        }
+        done();
+      });
+    });
+
     it('should connect', function(done) {
       BedquiltClient.connect(_cs, function(err, db) {
         should.equal(err, null);
@@ -35,7 +44,7 @@ describe('Basic test', function() {
       BedquiltClient.connect(_cs, function(err, db) {
         db.listCollections(function(err, result) {
           should.equal(err, null);
-          should.equal(result, 0);
+          should.equal(result.length, 0);
           done();
         });
       });
