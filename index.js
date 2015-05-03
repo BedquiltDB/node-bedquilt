@@ -23,7 +23,7 @@ BedquiltClient.connect = function(connectionString, callback) {
           }
           return callback(null, result);
         });
-        return client.end();
+        return null;
       });
     },
     listCollections: function(callback) {
