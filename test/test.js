@@ -46,7 +46,22 @@ describe('Basic test', function() {
         db.listCollections(function(err, result) {
           should.equal(err, null);
           should.equal(result.length, 0);
-          done();
+        });
+      });
+      // with one collection
+      BedquiltClient.connect(_cs, function(err, db) {
+        db.listCollections(function(err, result) {
+          should.equal(err, null);
+          should.equal(result.length, 0);
+          db.createCollection('things', function(err, created) {
+            should.equal(err, null);
+            should.equal(created, true);
+            db.listCollections(function(err, collections) {
+              should.equal(collections.length, 1);
+              should.equal(collections[0], 'things');
+              done();
+            });
+          });
         });
       });
     });
