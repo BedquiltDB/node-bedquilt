@@ -65,6 +65,22 @@ describe('Basic test', function() {
     });
   });
 
+
+  describe('BedquiltClient#deleteCollection', function() {
+    beforeEach(_cleanup);
+    afterEach(_cleanup);
+
+    it('should not delete a collection which does not exist', function(done) {
+      BedquiltClient.connect(_cs, function(err, db) {
+        db.deleteCollection('stuff', function(err, deleted) {
+          should.equal(err, null);
+          should.equal(deleted, false);
+          done();
+        });
+      });
+    });
+  });
+
   describe('BedquiltClien#listCollections', function() {
     beforeEach(_cleanup);
     afterEach(_cleanup);

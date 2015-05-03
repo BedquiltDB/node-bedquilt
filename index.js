@@ -51,6 +51,15 @@ BedquiltClient.connect = function(connectionString, callback) {
           return callback(null, result.rows[0]['bq_create_collection']);
         }
       });
+    },
+    deleteCollection: function(collectionName, callback) {
+      return this._query('select bq_delete_collection($1::text)', [collectionName], function(err, result) {
+        if(err) {
+          return callback(err, null);
+        } else {
+          return callback(null, result.rows[0]['bq_delete_collection']);
+        }
+      });
     }
 
   };
