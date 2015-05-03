@@ -1,4 +1,5 @@
-/* jslint node: true */
+/*jslint node: true*/
+/*global require, exports*/
 "use strict";
 
 var pg = require('pg');

@@ -1,4 +1,5 @@
-/* jslint node: true */
+/*jslint node: true*/
+/*global require, describe, it, before, beforeEach, after, afterEach */
 "use strict";
 
 var should = require("should");
