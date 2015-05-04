@@ -17,7 +17,7 @@ var _cleanup = function(done) {
   });
 };
 
-describe('Basic test', function() {
+describe('BedquiltClient', function() {
 
   describe('BedquiltClient#connect()', function() {
     beforeEach(_cleanup);
@@ -125,6 +125,25 @@ describe('Basic test', function() {
               done();
             });
           });
+        });
+      });
+    });
+
+  });
+});
+
+describe('BedquiltCollection', function() {
+
+  describe('BedquiltCollection#count()', function() {
+    beforeEach(_cleanup);
+    afterEach(_cleanup);
+
+    it('should return zero on non-existant collection', function(done) {
+      BedquiltClient.connect(_cs, function(err, db) {
+        var things = db.collection('things');
+        things.count({}, function(err, result) {
+          should.equal(result, 0);
+          done();
         });
       });
     });
