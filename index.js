@@ -70,17 +70,25 @@ BedquiltClient.connect = function(connectionString, callback) {
 function BedquiltCollection(db, collectionName) {
   this.db = db;
   this.collectionName = collectionName;
-  this._query = function(queryString, params, callback) {
-    return db._query(queryString, params, callback);
-  };
 
   this.count = function(queryDoc, callback) {
-    var query = "select bq_count($1::text, $2::json)";
-    return this._query(query, [this.collectionName, queryDoc], function(err, result) {
+    var query = "select bq_count($1::text, $2::json);";
+    return this.db._query(query, [this.collectionName, queryDoc], function(err, result) {
       if(err) {
         return callback(err, null);
       } else {
         return callback(null, result.rows[0]['bq_count']);
+      }
+    });
+  };
+
+  this.insert = function(doc, callback) {
+    var query = "select bq_insert($1::text, $2::json);";
+    return this.db._query(query, [this.collectionName, doc], function(err, result) {
+      if(err) {
+        return callback(err, null);
+      } else {
+        return callback(null, result.rows[0]['bq_insert']);
       }
     });
   };
