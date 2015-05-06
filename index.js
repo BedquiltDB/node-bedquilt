@@ -31,16 +31,19 @@ BedquiltClient.connect = function(connectionString, callback) {
     },
 
     listCollections: function(callback) {
-      return this._query('select bq_list_collections();', [], function(err, result) {
-        if(err) {
-          return callback(err, null);
-        } else {
-          var collections = result.rows.map(function(row) {
-            return row['bq_list_collections'];
-          });
-          return callback(null, collections);
-        }
-      });
+      return this._query(
+        'select bq_list_collections();',
+        [],
+        function(err, result) {
+          if(err) {
+            return callback(err, null);
+          } else {
+            var collections = result.rows.map(function(row) {
+              return row['bq_list_collections'];
+            });
+            return callback(null, collections);
+          }
+        });
     },
 
     createCollection: function(collectionName, callback) {
@@ -54,13 +57,16 @@ BedquiltClient.connect = function(connectionString, callback) {
     },
 
     deleteCollection: function(collectionName, callback) {
-      return this._query('select bq_delete_collection($1::text)', [collectionName], function(err, result) {
-        if(err) {
-          return callback(err, null);
-        } else {
-          return callback(null, result.rows[0]['bq_delete_collection']);
-        }
-      });
+      return this._query(
+        'select bq_delete_collection($1::text)',
+        [collectionName],
+        function(err, result) {
+          if(err) {
+            return callback(err, null);
+          } else {
+            return callback(null, result.rows[0]['bq_delete_collection']);
+          }
+        });
     }
   };
 
@@ -73,7 +79,8 @@ function BedquiltCollection(db, collectionName) {
 
   this.count = function(queryDoc, callback) {
     var query = "select bq_count($1::text, $2::json);";
-    return this.db._query(query, [this.collectionName, queryDoc], function(err, result) {
+    var params = [this.collectionName, queryDoc];
+    return this.db._query(query, params, function(err, result) {
       if(err) {
         return callback(err, null);
       } else {
@@ -84,7 +91,8 @@ function BedquiltCollection(db, collectionName) {
 
   this.insert = function(doc, callback) {
     var query = "select bq_insert($1::text, $2::json);";
-    return this.db._query(query, [this.collectionName, doc], function(err, result) {
+    var params = [this.collectionName, doc];
+    return this.db._query(query, params, function(err, result) {
       if(err) {
         return callback(err, null);
       } else {
