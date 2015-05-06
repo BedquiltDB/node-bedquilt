@@ -40,7 +40,9 @@ describe('BedquiltClient', function() {
 
     it('should allow us to query', function(done) {
       BedquiltClient.connect(_cs, function(err, db) {
-        db._query('select 1 as num', [], function(err, result) {
+        db._query('select 1 as num', [],
+                  function(r) { return r; },
+                  function(err, result) {
           should.equal(err, null);
           should.equal(result.rows[0]['num'], 1);
           done();
