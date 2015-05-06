@@ -156,7 +156,11 @@ describe('BedquiltCollection', function() {
     it('should return _id of document', function(done) {
       BedquiltClient.connect(_cs, function(err, db) {
         var things = db.collection('things');
-        things.insert({_id: 'spanner', description: "A small spanner"}, function(err, result) {
+        var doc = {
+          _id: 'spanner',
+          description: 'A small spanner'
+        };
+        things.insert(doc, function(err, result) {
           should.equal(null, err);
           should.equal('spanner', result);
           things.count({}, function(err, result) {
@@ -168,5 +172,30 @@ describe('BedquiltCollection', function() {
       });
     });
   });
+
+  describe('BedquiltCollection#save()', function() {
+    beforeEach(_cleanup);
+    afterEach(_cleanup);
+
+    it('should return _id of document', function(done) {
+      BedquiltClient.connect(_cs, function(err, db) {
+        var things = db.collection('things');
+        var doc = {
+          _id: 'spanner',
+          description: 'A small spanner'
+        };
+        things.save(doc, function(err, result) {
+          should.equal(null, err);
+          should.equal('spanner', result);
+          things.count({}, function(err, result) {
+            should.equal(null, err);
+            should.equal(1, result);
+            done();
+          });
+        });
+      });
+    });
+  });
+
 
 });

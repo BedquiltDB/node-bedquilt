@@ -100,6 +100,18 @@ function BedquiltCollection(db, collectionName) {
       }
     });
   };
+
+  this.save = function(doc, callback) {
+    var query = "select bq_save($1::text, $2::json);";
+    var params = [this.collectionName, doc];
+    return this.db._query(query, params, function(err, result) {
+      if(err) {
+        return callback(err, null);
+      } else {
+        return callback(null, result.rows[0]['bq_save']);
+      }
+    });
+  };
 };
 
 
