@@ -4,6 +4,21 @@
 
 var pg = require('pg');
 
+var project = {
+  column: function(columnName) {
+    return function(result) {
+      return result.rows.map(function(row) {
+        return row[columnName];
+      });
+    };
+  },
+  single: function(columnName) {
+    return function(result) {
+      return result.rows[0][columnName];
+    };
+  }
+};
+
 function BedquiltClient() {};
 
 BedquiltClient.connect = function(connectionString, callback) {
@@ -39,45 +54,29 @@ BedquiltClient.connect = function(connectionString, callback) {
       return this._query(
         'select bq_list_collections();',
         [],
-        _pass(),
-        function(err, result) {
-          if(err) {
-            return callback(err, null);
-          } else {
-            var collections = result.rows.map(function(row) {
-              return row['bq_list_collections'];
-            });
-            return callback(null, collections);
-          }
-        });
+        project.column('bq_list_collections'),
+        callback
+      );
     },
 
     createCollection: function(collectionName, callback) {
-      return this._query('select bq_create_collection($1::text)',
-                         [collectionName],
-                         _pass(),
-                         function(err, result) {
-        if(err) {
-          return callback(err, null);
-        } else {
-          return callback(null, result.rows[0]['bq_create_collection']);
-        }
-      });
+      return this._query(
+        'select bq_create_collection($1::text);',
+        [collectionName],
+        project.single('bq_create_collection'),
+        callback
+      );
     },
 
     deleteCollection: function(collectionName, callback) {
       return this._query(
-        'select bq_delete_collection($1::text)',
+        'select bq_delete_collection($1::text);',
         [collectionName],
-        _pass(),
-        function(err, result) {
-          if(err) {
-            return callback(err, null);
-          } else {
-            return callback(null, result.rows[0]['bq_delete_collection']);
-          }
-        });
+        project.single('bq_delete_collection'),
+        callback
+      );
     }
+
   };
 
   return callback(null, db);
@@ -87,23 +86,11 @@ function BedquiltCollection(db, collectionName) {
   this.db = db;
   this.collectionName = collectionName;
 
-  var _column = function(columnName) {
-    return function(result) {
-      return result.rows[0][columnName];
-    };
-  };
-
-  var _only = function() {
-    return function(result) {
-      return result.rows[0][0];
-    };
-  };
-
   this.count = function(queryDoc, callback) {
     return this.db._query(
       "select bq_count($1::text, $2::json);",
       [this.collectionName, queryDoc],
-      _column('bq_count'),
+      project.single('bq_count'),
       callback
     );
   };
@@ -112,7 +99,7 @@ function BedquiltCollection(db, collectionName) {
     return this.db._query(
       "select bq_insert($1::text, $2::json);",
       [this.collectionName, doc],
-      _column('bq_insert'),
+      project.single('bq_insert'),
       callback
     );
   };
@@ -121,7 +108,7 @@ function BedquiltCollection(db, collectionName) {
     return this.db._query(
       "select bq_save($1::text, $2::json);",
       [this.collectionName, doc],
-      _column('bq_save'),
+      project.single('bq_save'),
       callback
     );
   };
