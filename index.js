@@ -4,21 +4,6 @@
 
 var pg = require('pg');
 
-var project = {
-  column: function(columnName) {
-    return function(result) {
-      return result.rows.map(function(row) {
-        return row[columnName];
-      });
-    };
-  },
-  single: function(columnName) {
-    return function(result) {
-      return result.rows[0][columnName];
-    };
-  }
-};
-
 function BedquiltClient() {};
 
 BedquiltClient.connect = function(connectionString, callback) {
@@ -112,6 +97,22 @@ function BedquiltCollection(db, collectionName) {
       callback
     );
   };
+};
+
+
+var project = {
+  column: function(columnName) {
+    return function(result) {
+      return result.rows.map(function(row) {
+        return row[columnName];
+      });
+    };
+  },
+  single: function(columnName) {
+    return function(result) {
+      return result.rows[0][columnName];
+    };
+  }
 };
 
 
