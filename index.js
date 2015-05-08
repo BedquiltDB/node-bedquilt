@@ -97,6 +97,33 @@ function BedquiltCollection(db, collectionName) {
       callback
     );
   };
+
+  this.find = function(queryDoc, callback) {
+    return this.db._query(
+      "select bq_find($1::text, $2::json);",
+      [this.collectionName, queryDoc],
+      project.column('bq_find'),
+      callback
+    );
+  };
+
+  this.findOne = function(queryDoc, callback) {
+    return this.db._query(
+      "select bq_find_one($1::text, $2::json);",
+      [this.collectionName, queryDoc],
+      project.column('bq_find_one'),
+      callback
+    );
+  };
+
+  this.findOneById = function(_id, callback) {
+    return this.db._query(
+      "select bq_find_one_by_id($1::text, $2::text);",
+      [this.collectionName, _id],
+      project.single('bq_find_one_by_id'),
+      callback
+    );
+  };
 };
 
 
