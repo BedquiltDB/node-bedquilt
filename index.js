@@ -111,7 +111,7 @@ function BedquiltCollection(db, collectionName) {
     return this.db._query(
       "select bq_find_one($1::text, $2::json);",
       [this.collectionName, queryDoc],
-      project.column('bq_find_one'),
+      project.single('bq_find_one'),
       callback
     );
   };
