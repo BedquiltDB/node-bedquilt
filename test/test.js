@@ -5,6 +5,7 @@
 var should = require("should");
 var BedquiltClient = require('../index.js').BedquiltClient;
 var testutils = require('./testutils.js');
+var async = require('async');
 
 var _cs = testutils.connectionString;
 
@@ -169,6 +170,63 @@ describe('BedquiltCollection', function() {
             should.equal(null, err);
             should.equal(1, result);
             done();
+          });
+        });
+      });
+    });
+  });
+
+  describe('BedquiltCollection#find()', function() {
+    beforeEach(_cleanup);
+    afterEach(_cleanup);
+
+    describe('on non-existant collection', function() {
+      it('should return empty list', function(done) {
+        BedquiltClient.connect(_cs, function(err, db) {
+          var things = db.collection('things');
+          things.find({}, function(err, result) {
+            should.equal(0, result.length);
+            done();
+          });
+        });
+      });
+    });
+
+    describe('on empty collection', function() {
+      it('should return empty list', function(done) {
+        BedquiltClient.connect(_cs, function(err, db) {
+          var things = db.collection('things');
+          things.find({}, function(err, result) {
+            should.equal(0, result.length);
+            done();
+          });
+        });
+      });
+    });
+
+    describe('empty query doc', function() {
+      it('should return entire collection', function(done) {
+        BedquiltClient.connect(_cs, function(err, db) {
+          var things = db.collection('things');
+          async.series([
+            function(callback) {
+              things.save({_id: 'one', tag: 'aa'}, callback);
+            },
+            function(callback) {
+              things.save({_id: 'two', tag: 'bb'}, callback);
+            },
+            function(callback) {
+              things.save({_id: 'three', tag: 'cc'}, callback);
+            },
+            function(callback) {
+              things.save({_id: 'four', tag: 'dd'}, callback);
+            }
+          ], function(err, results) {
+            things.find({}, function(err, result) {
+              should.equal(4, result.length);
+              should.deepEqual({_id: 'one', tag: 'aa'}, result[0]);
+              done();
+            });
           });
         });
       });
