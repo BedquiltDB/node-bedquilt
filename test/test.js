@@ -205,28 +205,38 @@ describe('BedquiltCollection', function() {
     });
 
     describe('empty query doc', function() {
+      beforeEach(function(done) {
+        testutils.cleanDatabase(function(err, result) {
+          if(err) {
+            throw err;
+          }
+          BedquiltClient.connect(_cs, function(err, db) {
+            var things = db.collection('things');
+            async.series([
+                function(callback) {
+                things.save({_id: 'one', tag: 'aa'}, callback);
+                },
+                function(callback) {
+                things.save({_id: 'two', tag: 'bb'}, callback);
+                },
+                function(callback) {
+                things.save({_id: 'three', tag: 'cc'}, callback);
+                },
+                function(callback) {
+                things.save({_id: 'four', tag: 'dd'}, callback);
+                }
+            ], function(err, results) { done(); });
+          });
+        });
+      });
+
       it('should return entire collection', function(done) {
         BedquiltClient.connect(_cs, function(err, db) {
           var things = db.collection('things');
-          async.series([
-            function(callback) {
-              things.save({_id: 'one', tag: 'aa'}, callback);
-            },
-            function(callback) {
-              things.save({_id: 'two', tag: 'bb'}, callback);
-            },
-            function(callback) {
-              things.save({_id: 'three', tag: 'cc'}, callback);
-            },
-            function(callback) {
-              things.save({_id: 'four', tag: 'dd'}, callback);
-            }
-          ], function(err, results) {
-            things.find({}, function(err, result) {
-              should.equal(4, result.length);
-              should.deepEqual({_id: 'one', tag: 'aa'}, result[0]);
-              done();
-            });
+          things.find({}, function(err, result) {
+            should.equal(4, result.length);
+            should.deepEqual({_id: 'one', tag: 'aa'}, result[0]);
+            done();
           });
         });
       });
