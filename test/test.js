@@ -240,6 +240,18 @@ describe('BedquiltCollection', function() {
           });
         });
       });
+
+      it('should return one document when matching _id', function(done) {
+        BedquiltClient.connect(_cs, function(err, db) {
+          var things =db.collection('things');
+          things.find({_id: 'two'}, function(err, result) {
+            should.equal(result.length, 1);
+            should.deepEqual(result[0], {_id: 'two', tag: 'bb'});
+            done();
+          });
+        });
+      });
+
     });
   });
 
