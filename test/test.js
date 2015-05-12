@@ -224,6 +224,9 @@ describe('BedquiltCollection', function() {
                 },
                 function(callback) {
                 things.save({_id: 'four', tag: 'dd'}, callback);
+                },
+                function(callback) {
+                things.save({_id: 'five', tag: 'aa'}, callback);
                 }
             ], function(err, results) { done(); });
           });
@@ -234,7 +237,7 @@ describe('BedquiltCollection', function() {
         BedquiltClient.connect(_cs, function(err, db) {
           var things = db.collection('things');
           things.find({}, function(err, result) {
-            should.equal(4, result.length);
+            should.equal(5, result.length);
             should.deepEqual({_id: 'one', tag: 'aa'}, result[0]);
             done();
           });
@@ -247,6 +250,20 @@ describe('BedquiltCollection', function() {
           things.find({_id: 'two'}, function(err, result) {
             should.equal(result.length, 1);
             should.deepEqual(result[0], {_id: 'two', tag: 'bb'});
+            done();
+          });
+        });
+      });
+
+      it('should return two documents when they match', function(done) {
+        BedquiltClient.connect(_cs, function(err, db) {
+          var things = db.collection('things');
+          things.find({tag: 'aa'}, function(err, result) {
+            should.equal(result.length, 2);
+            should.deepEqual([
+              {_id: 'one', tag: 'aa'},
+              {_id: 'five', tag: 'aa'}
+            ], result);
             done();
           });
         });
