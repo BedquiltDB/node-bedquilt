@@ -124,6 +124,31 @@ function BedquiltCollection(db, collectionName) {
       callback
     );
   };
+
+  this.remove = function(queryDoc, callback) {
+    return this.db._query(
+      "select bq_remove($1::text, $2::json)",
+      [this.collectionName, queryDoc],
+      project.single('bq_remove'),
+      callback
+    );
+  };
+  this.removeOne = function(queryDoc, callback) {
+    return this.db._query(
+      "select bq_remove_one($1::text, $2::json)",
+      [this.collectionName, queryDoc],
+      project.single('bq_remove_one'),
+      callback
+    );
+  };
+  this.removeOneById = function(_id, callback) {
+    return this.db._query(
+      "select bq_remove_one_by_id($1::text, $2::text)",
+      [this.collectionName, _id],
+      project.single('bq_remove_one_by_id'),
+      callback
+    );
+  };
 };
 
 
