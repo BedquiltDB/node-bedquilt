@@ -13,14 +13,19 @@ var cleanDatabase = function(callback) {
                 "create extension bedquilt;";
     client.query(query, [], function(err, result) {
       if(err) {
-        return callback(err, null);
+        throw err;
       } else {
         done();
-        return callback(null, true);
+        return callback();
       }
     });
   });
 };
 
+var connect = function(callback) {
+  BedquiltClient.connect(connectionString, callback);
+};
+
 exports.connectionString = connectionString;
 exports.cleanDatabase = cleanDatabase;
+exports.connect = connect;
