@@ -125,22 +125,3 @@ describe('BedquiltClient', function() {
 
   });
 });
-
-describe('BedquiltCollection', function() {
-
-  describe('BedquiltCollection#count()', function() {
-    beforeEach(testutils.cleanDatabase);
-    afterEach(testutils.cleanDatabase);
-
-    it('should return zero on non-existant collection', function(done) {
-      testutils.connect(function(err, db) {
-        var things = db.collection('things');
-        things.count({}, function(err, result) {
-          should.equal(result, 0);
-          done();
-        });
-      });
-    });
-  });
-
-});
