@@ -21,6 +21,31 @@ describe('BedquiltCollection find ops', function() {
         });
       });
     });
+
+    it('sould return count of documents in collection', function(done) {
+      testutils.connect(function(err, db) {
+        var things = db.collection('things');
+        async.series(
+          [
+            function(callback) {
+              things.insert({}, callback);
+            },
+            function(callback) {
+              things.insert({}, callback);
+            },
+            function(callback) {
+              things.insert({}, callback);
+            }
+          ],
+          function(err, results) {
+            things.count({}, function(err, result) {
+              should.equal(3, result);
+              done();
+            });
+          }
+        );
+      });
+    });
   });
 
   describe('BedquiltCollection#find()', function() {
