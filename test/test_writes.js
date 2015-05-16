@@ -93,6 +93,53 @@ describe('BedquiltCollection write ops', function() {
     });
   });
 
+
+  describe('BedquiltCollection#removeOneById()', function() {
+    beforeEach(testutils.cleanDatabase);
+    afterEach(testutils.cleanDatabase);
+
+    it('should do nothing on empty collection', function(done) {
+      testutils.connect(function(err, db) {
+        var things = db.collection('things');
+        things.removeOneById('one', function(err, result) {
+          should.equal(result, 0);
+          done();
+        });
+      });
+    });
+
+    it('should remove documents from collection', function(done) {
+      testutils.connect(function(err, db) {
+        var things = db.collection('things');
+
+        async.series([
+          function(callback) {
+            things.insert({_id: 'one', tag: 'aa'}, callback);
+          },
+          function(callback) {
+            things.insert({_id: 'two', tag: 'bb'}, callback);
+          },
+          function(callback) {
+            things.insert({_id: 'three', tag: 'aa'}, callback);
+          },
+        ], function(err, results) {
+          things.removeOneById('one', function(err, result) {
+            should.equal(result, 1);
+            things.count({}, function(err, result) {
+              should.equal(2, result);
+              things.count({tag: 'aa'}, function(err, result) {
+                should.equal(1, result);
+                done();
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+
+
+
   describe('BedquiltCollection#insert()', function() {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
