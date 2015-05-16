@@ -133,6 +133,7 @@ function BedquiltCollection(db, collectionName) {
       callback
     );
   };
+
   this.removeOne = function(queryDoc, callback) {
     return this.db._query(
       "select bq_remove_one($1::text, $2::json)",
@@ -141,6 +142,7 @@ function BedquiltCollection(db, collectionName) {
       callback
     );
   };
+
   this.removeOneById = function(_id, callback) {
     return this.db._query(
       "select bq_remove_one_by_id($1::text, $2::text)",
