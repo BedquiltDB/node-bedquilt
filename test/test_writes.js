@@ -47,8 +47,50 @@ describe('BedquiltCollection write ops', function() {
         });
       });
     });
+  });
 
+  describe('BedquiltCollection#removeOne()', function() {
+    beforeEach(testutils.cleanDatabase);
+    afterEach(testutils.cleanDatabase);
 
+    it('should do nothing on empty collection', function(done) {
+      testutils.connect(function(err, db) {
+        var things = db.collection('things');
+        things.removeOne({tag: 'aa'}, function(err, result) {
+          should.equal(result, 0);
+          done();
+        });
+      });
+    });
+
+    it('should remove documents from collection', function(done) {
+      testutils.connect(function(err, db) {
+        var things = db.collection('things');
+
+        async.series([
+          function(callback) {
+            things.insert({tag: 'aa'}, callback);
+          },
+          function(callback) {
+            things.insert({tag: 'bb'}, callback);
+          },
+          function(callback) {
+            things.insert({tag: 'aa'}, callback);
+          },
+        ], function(err, results) {
+          things.removeOne({tag: 'aa'}, function(err, result) {
+            should.equal(result, 1);
+            things.count({}, function(err, result) {
+              should.equal(2, result);
+              things.count({tag: 'aa'}, function(err, result) {
+                should.equal(1, result);
+                done();
+              });
+            });
+          });
+        });
+      });
+    });
   });
 
   describe('BedquiltCollection#insert()', function() {
