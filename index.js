@@ -12,7 +12,11 @@ var pg = require('pg');
 function BedquiltClient() {};
 
 /**
- * Connect to server
+ * Establish a connection
+ * @method
+ * @static
+ * @param {string} connectionString The pg connection string
+ * @param {function} callback The result callback
  */
 BedquiltClient.connect = function(connectionString, callback) {
   var _pass = function() {

@@ -9,8 +9,14 @@ Returns `BedquiltClient`
 
 ## `connect`
 
-Connect to server
+Establish a connection
 
+### Parameters
+
+| name | type | description |
+| ---- | ---- | ----------- |
+| `connectionString` | `string` | The pg connection string |
+| `callback` | `function` | The result callback |
 
 
 
