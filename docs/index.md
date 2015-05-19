@@ -8,7 +8,7 @@ Node-Bedquilt is the nodejs driver for [BedquiltDB](http://bedquiltdb.github.io)
 PyBedquilt can be installed via `npm`:
 
 ```
-$ npm install node-bedquilt
+$ npm install node-bedquilt --save
 ```
 
 
