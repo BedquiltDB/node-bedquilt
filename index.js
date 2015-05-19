@@ -4,8 +4,14 @@
 
 var pg = require('pg');
 
+/**
+ * The BedquiltClient function object
+ */
 function BedquiltClient() {};
 
+/**
+ * Connect to server
+ */
 BedquiltClient.connect = function(connectionString, callback) {
   var _pass = function() {
     return function(result) {

@@ -3,4 +3,7 @@
 test:
 	mocha
 
-.PHONY: test
+docs:
+	documentation -f md > docs/api_docs.md
+
+.PHONY: test docs
