@@ -1,9 +1,11 @@
 # node-bedquilt makefile
 
+all: docs test
+
 test:
 	mocha
 
 docs:
 	documentation -f md > docs/api_docs.md
 
-.PHONY: test docs
+.PHONY: all test docs

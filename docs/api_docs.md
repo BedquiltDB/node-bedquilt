@@ -1,10 +1,11 @@
 ## `BedquiltClient`
 
-The BedquiltClient function object
+Creates a new BedquiltClient instance
 
 
 
 
+Returns `BedquiltClient` 
 
 ## `connect`
 

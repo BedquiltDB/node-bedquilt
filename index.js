@@ -5,7 +5,9 @@
 var pg = require('pg');
 
 /**
- * The BedquiltClient function object
+ * Creates a new BedquiltClient instance
+ * @class
+ * @return {BedquiltClient}
  */
 function BedquiltClient() {};
 
