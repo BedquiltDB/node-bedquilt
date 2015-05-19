@@ -5,14 +5,14 @@
 var pg = require('pg');
 
 /**
- * Creates a new BedquiltClient instance
+ * Creates a new BedquiltClient instance.
  * @class
  * @return {BedquiltClient}
  */
 function BedquiltClient() {};
 
 /**
- * Establish a connection
+ * Establish a connection to the database.
  * @method
  * @static
  * @param {string} connectionString The pg connection string
@@ -79,6 +79,12 @@ BedquiltClient.connect = function(connectionString, callback) {
   return callback(null, db);
 };
 
+/**
+ * Create a BedquiltCollection instance
+ * @constructor
+ * @param {BedquiltClient} db The BedquiltClient instance to use
+ * @param {string} collectionName Name of collection
+ */
 function BedquiltCollection(db, collectionName) {
   this.db = db;
   this.collectionName = collectionName;
