@@ -16,10 +16,10 @@ describe('BedquiltClient', function() {
     it('should connect', function(done) {
       BedquiltClient.connect(
         testutils.connectionString,
-        function(err, db) {
+        function(err, client) {
           should.equal(err, null);
-          should.notEqual(db, null);
-          should.equal(db.connectionString, testutils.connectionString);
+          should.notEqual(client, null);
+          should.equal(client.connectionString, testutils.connectionString);
           done();
         });
     });
@@ -31,8 +31,8 @@ describe('BedquiltClient', function() {
     afterEach(testutils.cleanDatabase);
 
     it('should allow us to query', function(done) {
-      testutils.connect(function(err, db) {
-        db._query('select 1 as num', [],
+      testutils.connect(function(err, client) {
+        client._query('select 1 as num', [],
                   function(r) { return r; },
                   function(err, result) {
           should.equal(err, null);
@@ -49,8 +49,8 @@ describe('BedquiltClient', function() {
     afterEach(testutils.cleanDatabase);
 
     it('should create a collection', function(done) {
-      testutils.connect(function(err, db) {
-        db.createCollection('stuff', function(err, created) {
+      testutils.connect(function(err, client) {
+        client.createCollection('stuff', function(err, created) {
           should.equal(err, null);
           should.equal(created, true);
           done();
@@ -65,8 +65,8 @@ describe('BedquiltClient', function() {
     afterEach(testutils.cleanDatabase);
 
     it('should not delete a collection which does not exist', function(done) {
-      testutils.connect(function(err, db) {
-        db.deleteCollection('stuff', function(err, deleted) {
+      testutils.connect(function(err, client) {
+        client.deleteCollection('stuff', function(err, deleted) {
           should.equal(err, null);
           should.equal(deleted, false);
           done();
@@ -75,12 +75,12 @@ describe('BedquiltClient', function() {
     });
 
     it("should delete a collection", function(done) {
-      testutils.connect(function(err, db) {
-        db.createCollection('stuff', function(err, created) {
-          db.deleteCollection('stuff', function(err, deleted) {
+      testutils.connect(function(err, client) {
+        client.createCollection('stuff', function(err, created) {
+          client.deleteCollection('stuff', function(err, deleted) {
             should.equal(err, null);
             should.equal(deleted, true);
-            db.deleteCollection('stuff', function(err, deleted) {
+            client.deleteCollection('stuff', function(err, deleted) {
               should.equal(deleted, false);
               done();
             });
@@ -96,8 +96,8 @@ describe('BedquiltClient', function() {
 
     it('should return 0 when there are no collections', function(done) {
       // with no collections
-      testutils.connect(function(err, db) {
-        db.listCollections(function(err, result) {
+      testutils.connect(function(err, client) {
+        client.listCollections(function(err, result) {
           should.equal(err, null);
           should.equal(result.length, 0);
           done();
@@ -106,14 +106,14 @@ describe('BedquiltClient', function() {
     });
 
     it('should return 1 when there is one collection', function(done) {
-      testutils.connect(function(err, db) {
-        db.listCollections(function(err, result) {
+      testutils.connect(function(err, client) {
+        client.listCollections(function(err, result) {
           should.equal(err, null);
           should.equal(result.length, 0);
-          db.createCollection('things', function(err, created) {
+          client.createCollection('things', function(err, created) {
             should.equal(err, null);
             should.equal(created, true);
-            db.listCollections(function(err, collections) {
+            client.listCollections(function(err, collections) {
               should.equal(collections.length, 1);
               should.equal(collections[0], 'things');
               done();

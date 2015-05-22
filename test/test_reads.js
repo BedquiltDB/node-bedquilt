@@ -13,8 +13,8 @@ describe('BedquiltCollection find ops', function() {
     afterEach(testutils.cleanDatabase);
 
     it('should return zero on non-existant collection', function(done) {
-      testutils.connect(function(err, db) {
-        var things = db.collection('things');
+      testutils.connect(function(err, client) {
+        var things = client.collection('things');
         things.count({}, function(err, result) {
           should.equal(result, 0);
           done();
@@ -23,8 +23,8 @@ describe('BedquiltCollection find ops', function() {
     });
 
     it('sould return count of documents in collection', function(done) {
-      testutils.connect(function(err, db) {
-        var things = db.collection('things');
+      testutils.connect(function(err, client) {
+        var things = client.collection('things');
         async.series(
           [
             function(callback) {
@@ -54,8 +54,8 @@ describe('BedquiltCollection find ops', function() {
 
     describe('on non-existant collection', function() {
       it('should return empty list', function(done) {
-        testutils.connect(function(err, db) {
-          var things = db.collection('things');
+        testutils.connect(function(err, client) {
+          var things = client.collection('things');
           things.find({}, function(err, result) {
             should.equal(0, result.length);
             done();
@@ -66,8 +66,8 @@ describe('BedquiltCollection find ops', function() {
 
     describe('on empty collection', function() {
       it('should return empty list', function(done) {
-        testutils.connect(function(err, db) {
-          var things = db.collection('things');
+        testutils.connect(function(err, client) {
+          var things = client.collection('things');
           things.find({}, function(err, result) {
             should.equal(0, result.length);
             done();
@@ -82,8 +82,8 @@ describe('BedquiltCollection find ops', function() {
           if(err) {
             throw err;
           }
-          testutils.connect(function(err, db) {
-            var things = db.collection('things');
+          testutils.connect(function(err, client) {
+            var things = client.collection('things');
             async.series([
                 function(callback) {
                 things.save({_id: 'one', tag: 'aa'}, callback);
@@ -106,8 +106,8 @@ describe('BedquiltCollection find ops', function() {
       });
 
       it('should return entire collection', function(done) {
-        testutils.connect(function(err, db) {
-          var things = db.collection('things');
+        testutils.connect(function(err, client) {
+          var things = client.collection('things');
           things.find({}, function(err, result) {
             should.equal(5, result.length);
             should.deepEqual({_id: 'one', tag: 'aa'}, result[0]);
@@ -117,8 +117,8 @@ describe('BedquiltCollection find ops', function() {
       });
 
       it('should return one document when matching _id', function(done) {
-        testutils.connect(function(err, db) {
-          var things =db.collection('things');
+        testutils.connect(function(err, client) {
+          var things =client.collection('things');
           things.find({_id: 'two'}, function(err, result) {
             should.equal(result.length, 1);
             should.deepEqual(result[0], {_id: 'two', tag: 'bb'});
@@ -128,8 +128,8 @@ describe('BedquiltCollection find ops', function() {
       });
 
       it('should return two documents when they match', function(done) {
-        testutils.connect(function(err, db) {
-          var things = db.collection('things');
+        testutils.connect(function(err, client) {
+          var things = client.collection('things');
           things.find({tag: 'aa'}, function(err, result) {
             should.equal(result.length, 2);
             should.deepEqual([

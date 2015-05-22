@@ -13,8 +13,8 @@ describe('BedquiltCollection write ops', function() {
     afterEach(testutils.cleanDatabase);
 
     it('should do nothing on empty collection', function(done) {
-      testutils.connect(function(err, db) {
-        var things = db.collection('things');
+      testutils.connect(function(err, client) {
+        var things = client.collection('things');
         things.remove({tag: 'aa'}, function(err, result) {
           should.equal(result, 0);
           done();
@@ -23,8 +23,8 @@ describe('BedquiltCollection write ops', function() {
     });
 
     it('should remove documents from collection', function(done) {
-      testutils.connect(function(err, db) {
-        var things = db.collection('things');
+      testutils.connect(function(err, client) {
+        var things = client.collection('things');
 
         async.series([
           function(callback) {
@@ -54,8 +54,8 @@ describe('BedquiltCollection write ops', function() {
     afterEach(testutils.cleanDatabase);
 
     it('should do nothing on empty collection', function(done) {
-      testutils.connect(function(err, db) {
-        var things = db.collection('things');
+      testutils.connect(function(err, client) {
+        var things = client.collection('things');
         things.removeOne({tag: 'aa'}, function(err, result) {
           should.equal(result, 0);
           done();
@@ -64,8 +64,8 @@ describe('BedquiltCollection write ops', function() {
     });
 
     it('should remove documents from collection', function(done) {
-      testutils.connect(function(err, db) {
-        var things = db.collection('things');
+      testutils.connect(function(err, client) {
+        var things = client.collection('things');
 
         async.series([
           function(callback) {
@@ -99,8 +99,8 @@ describe('BedquiltCollection write ops', function() {
     afterEach(testutils.cleanDatabase);
 
     it('should do nothing on empty collection', function(done) {
-      testutils.connect(function(err, db) {
-        var things = db.collection('things');
+      testutils.connect(function(err, client) {
+        var things = client.collection('things');
         things.removeOneById('one', function(err, result) {
           should.equal(result, 0);
           done();
@@ -109,8 +109,8 @@ describe('BedquiltCollection write ops', function() {
     });
 
     it('should remove documents from collection', function(done) {
-      testutils.connect(function(err, db) {
-        var things = db.collection('things');
+      testutils.connect(function(err, client) {
+        var things = client.collection('things');
 
         async.series([
           function(callback) {
@@ -145,8 +145,8 @@ describe('BedquiltCollection write ops', function() {
     afterEach(testutils.cleanDatabase);
 
     it('should return _id of document', function(done) {
-      testutils.connect(function(err, db) {
-        var things = db.collection('things');
+      testutils.connect(function(err, client) {
+        var things = client.collection('things');
         var doc = {
           _id: 'spanner',
           description: 'A small spanner'
@@ -169,8 +169,8 @@ describe('BedquiltCollection write ops', function() {
     afterEach(testutils.cleanDatabase);
 
     it('should return _id of document', function(done) {
-      testutils.connect(function(err, db) {
-        var things = db.collection('things');
+      testutils.connect(function(err, client) {
+        var things = client.collection('things');
         var doc = {
           _id: 'spanner',
           description: 'A small spanner'
@@ -188,8 +188,8 @@ describe('BedquiltCollection write ops', function() {
     });
 
     it('should update document in place', function(done) {
-      testutils.connect(function(err, db) {
-        var things = db.collection('things');
+      testutils.connect(function(err, client) {
+        var things = client.collection('things');
         var doc = {
           _id: 'spanner',
           description: 'A small spanner'
