@@ -1,7 +1,7 @@
 node-bedquilt
 =============
 
-The nodejs driver for (BedquiltDB)[http://bedquiltdb.github.io]
+The nodejs driver for [BedquiltDB](http://bedquiltdb.github.io)
 
 
 ## Install
