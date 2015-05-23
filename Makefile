@@ -6,6 +6,7 @@ test:
 	mocha
 
 docs:
-	documentation -f md > docs/api_docs.md
+	echo 'Nope'
+	#documentation -f md > docs/api_docs.md
 
 .PHONY: all test docs
