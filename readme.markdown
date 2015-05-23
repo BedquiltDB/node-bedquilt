@@ -7,17 +7,17 @@ The nodejs driver for [BedquiltDB](http://bedquiltdb.github.io)
 ## Install
 
 ```
-$ npm install node-bedquilt --save
+$ npm install bedquilt --save
 ```
 
 
 ## Getting Started
 
 - First, [set up BedquiltDB](http://bedquiltdb.readthedocs.org/en/latest/getting_started/)
-- Install the node-bedquilt package: `npm install node-bedquilt`
+- Install the node-bedquilt package: `npm install bedquilt`
 - Connect to the BedquiltDB server:
 ```javascript
-var BedquiltClient = require('node-bedquilt').BedquiltClient;
+var BedquiltClient = require('bedquilt').BedquiltClient;
 
 BedquiltClient.connect('postgres://localhost/test', function(err, client) {
 

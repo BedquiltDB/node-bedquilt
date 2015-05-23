@@ -18,7 +18,7 @@ is an instance of BedquiltCollection.
 
 Example:
 ```javascript
-var BedquiltClient = require('node-bedquilt').BedquiltClient;
+var BedquiltClient = require('bedquilt').BedquiltClient;
 
 BedquiltClient.connect('postgres://localhost/test', function(err, client) {
   var people = client.collection('people');
