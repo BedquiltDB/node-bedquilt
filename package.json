@@ -15,7 +15,7 @@
   "license": "MIT",
   "keywords": [
     "bedquilt",
-    "bedquiltdb"
+    "bedquiltdb",
     "json",
     "nosql",
     "postgresql"
