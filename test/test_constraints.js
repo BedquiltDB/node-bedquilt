@@ -21,7 +21,36 @@ describe('BedquiltCollection constraint ops', function() {
         };
         things.addConstraints(constraints, function(err, result) {
           should.equal(result, true);
-          done();
+          things.save({wat: 1}, function(err, result) {
+            should.notEqual(err, null);
+            should.equal(result, null);
+            done();
+          });
+        });
+      });
+    });
+  });
+
+  describe('BedquiltCollection#listConstraints()', function() {
+    beforeEach(testutils.cleanDatabase);
+    afterEach(testutils.cleanDatabase);
+
+    it('should list all constraints', function(done) {
+      testutils.connect(function(err, client) {
+        var things = client.collection('things');
+        var constraints = {
+          name: {$required: 1,
+                 $notnull: 1}
+        };
+        things.listConstraints(function(err, result) {
+          should.deepEqual(result, []);
+          things.addConstraints(constraints, function(err, result) {
+            should.equal(result, true);
+            things.listConstraints(function(err, result) {
+              should.deepEqual(result, ['name:required', 'name:notnull']);
+              done();
+            });
+          });
         });
       });
     });
