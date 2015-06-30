@@ -56,4 +56,33 @@ describe('BedquiltCollection constraint ops', function() {
     });
   });
 
+  describe('BedquiltCollection#removeConstraints()', function() {
+    beforeEach(testutils.cleanDatabase);
+    afterEach(testutils.cleanDatabase);
+
+    it('should remove constraints', function(done) {
+      testutils.connect(function(err, client) {
+        var things = client.collection('things');
+        var constraints = {
+          name: {$required: 1,
+                 $notnull: 1}
+        };
+        things.addConstraints(constraints, function(err, result) {
+          should.equal(result, true);
+          things.save({wat: 1}, function(err, result) {
+            should.notEqual(err, null);
+            should.equal(result, null);
+            things.removeConstraints(constraints, function(err, result) {
+              should.equal(result, true);
+              things.insert({wat: 1}, function(err, result) {
+                should.equal(err, null);
+                done();
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+
 });
