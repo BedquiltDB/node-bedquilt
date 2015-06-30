@@ -29,6 +29,36 @@ describe('BedquiltCollection constraint ops', function() {
         });
       });
     });
+
+    it('should work with a more complex constraint', function(done) {
+      testutils.connect(function(err, client) {
+        var people = client.collection('people');
+        var spec = {
+          name: {
+            $required: 1,
+            $notnull: 1,
+            $type: 'string'
+          },
+          age: {
+            $required: 1,
+            $type: 'number'
+          },
+          addresses: {
+            $required: 1,
+            $type: 'array'
+          },
+          'address.0.city': {
+            $required: 1,
+            $notnull: 1,
+            $type: 'string'
+          }
+        };
+        people.addConstraints(spec, function(err, result) {
+          should.equal(result, true);
+        });
+      });
+    });
+
   });
 
   describe('BedquiltCollection#listConstraints()', function() {
