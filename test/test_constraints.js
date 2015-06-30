@@ -55,6 +55,7 @@ describe('BedquiltCollection constraint ops', function() {
         };
         people.addConstraints(spec, function(err, result) {
           should.equal(result, true);
+          done();
         });
       });
     });
