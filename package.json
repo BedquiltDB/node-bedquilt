@@ -1,6 +1,6 @@
 {
   "name": "bedquilt",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "A nodejs driver for BedquiltDB (http://bedquiltdb.github.io)",
   "repository": {
     "type": "git",
