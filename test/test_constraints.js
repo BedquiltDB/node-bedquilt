@@ -78,7 +78,7 @@ describe('BedquiltCollection constraint ops', function() {
           things.addConstraints(constraints, function(err, result) {
             should.equal(result, true);
             things.listConstraints(function(err, result) {
-              should.deepEqual(result, ['name:required', 'name:notnull']);
+              should.deepEqual(result, ['name:notnull', 'name:required']);
               done();
             });
           });
