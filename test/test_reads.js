@@ -47,6 +47,9 @@ describe('BedquiltCollection find ops', function() {
     var names = function(docs) {
       return docs.map(function(doc) { return doc['_id']; });
     };
+    var ages = function(docs) {
+      return docs.map(function(doc) { return doc['age']; });
+    };
 
     it('should skip two documents', function(done) {
       populate(function() {
@@ -75,7 +78,81 @@ describe('BedquiltCollection find ops', function() {
       });
     });
 
+    it('should limit to four documents', function(done) {
+      populate(function() {
+        testutils.connect(function(err, client) {
+          var things = client.collection('things');
+          things.find({}, {limit: 4}, function(err, result) {
+            should.equal(result.length, 4);
+            should.deepEqual(names(result), ['sarah', 'mike', 'irene', 'mary']);
+            done();
+          });
+        });
+      });
+    });
 
+    describe('with sort', function() {
+
+      it('should order correctly ascending', function(done) {
+        populate(function() {
+          testutils.connect(function(err, client) {
+            var things = client.collection('things');
+            things.find({}, {sort: {'age': 1}}, function(err, result) {
+              should.equal(result.length, 8);
+              var a = ages(result);
+              var sorted = a.slice().sort();
+              should.deepEqual(a, sorted);
+              done();
+            });
+          });
+        });
+      });
+
+      it('should order correctly ascending', function(done) {
+        populate(function() {
+          testutils.connect(function(err, client) {
+            var things = client.collection('things');
+            things.find({}, {sort: {'age': -1}}, function(err, result) {
+              should.equal(result.length, 8);
+              var a = ages(result);
+              var sorted = a.slice().sort().reverse();
+              should.deepEqual(a, sorted);
+              done();
+            });
+          });
+        });
+      });
+
+      it('should order correctly ascending with skip and limit', function(done) {
+        populate(function() {
+          testutils.connect(function(err, client) {
+            var things = client.collection('things');
+            var opts = {skip: 2, limit: 3, sort: {age: 1}};
+            things.find({}, opts, function(err, result) {
+              should.equal(result.length, 3);
+              should.deepEqual(ages(result), [22, 22, 25]);
+              should.deepEqual(names(result), ['sarah', 'dave', 'kate']);
+              done();
+            });
+          });
+        });
+      });
+
+      it('should order correctly descending with skip and limit', function(done) {
+        populate(function() {
+          testutils.connect(function(err, client) {
+            var things = client.collection('things');
+            var opts = {skip: 2, limit: 3, sort: {age: -1}};
+            things.find({}, opts, function(err, result) {
+              should.equal(result.length, 3);
+              should.deepEqual(ages(result), [31, 25, 22]);
+              should.deepEqual(names(result), ['brian', 'kate', 'sarah']);
+              done();
+            });
+          });
+        });
+      });
+    });
   });
 
   describe('BedquiltCollection#count()', function() {
