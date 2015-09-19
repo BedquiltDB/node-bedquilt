@@ -6,7 +6,60 @@ var should = require("should");
 var testutils = require('./testutils.js');
 var async = require('async');
 
+
 describe('BedquiltCollection find ops', function() {
+
+  describe('BedquiltCollection#find() with skip, limit and sort', function() {
+    beforeEach(testutils.cleanDatabase);
+    afterEach(testutils.cleanDatabase);
+
+    var populate = function(callback) {
+      testutils.connect(function(err, client) {
+        var things = client.collection('things');
+        async.series([
+          function(callback) {
+            things.save({_id: 'sarah', age: 22}, callback);
+          },
+          function(callback) {
+            things.save({_id: 'mike', age: 20}, callback);
+          },
+          function(callback) {
+            things.save({_id: 'irene', age: 40}, callback);
+          },
+          function(callback) {
+            things.save({_id: 'mary', age: 16}, callback);
+          },
+          function(callback) {
+            things.save({_id: 'brian', age: 31}, callback);
+          },
+          function(callback) {
+            things.save({_id: 'dave', age: 22}, callback);
+          },
+          function(callback) {
+            things.save({_id: 'kate', age: 25}, callback);
+          },
+          function(callback) {
+            things.save({_id: 'alice', age: 57}, callback);
+          }
+        ], function(err, results) { callback(); });
+      });
+    };
+    var names = function(docs) {
+      return docs.map(function(doc) { return doc['name']; });
+    };
+
+    it('should skip two documents', function(done) {
+      populate(function() {
+        testutils.connect(function(err, client) {
+          var things = client.collection('things');
+          things.find({}, {skip: 2}, function(err, result) {
+            should.equal(result.length, 6);
+            done();
+          });
+        });
+      });
+    });
+  });
 
   describe('BedquiltCollection#count()', function() {
     beforeEach(testutils.cleanDatabase);
