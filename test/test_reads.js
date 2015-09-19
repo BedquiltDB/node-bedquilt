@@ -141,6 +141,23 @@ describe('BedquiltCollection find ops', function() {
         });
       });
 
+      describe('with skip and limit', function() {
+        it('should return the right docs', function(done) {
+          testutils.connect(function(err, client) {
+            var things = client.collection('things');
+            things.find({}, {skip: 1, limit: 2}, function(err, result) {
+              should.equal(result.length, 2);
+              should.deepEqual(
+                result,
+                [{_id: 'two', tag: 'bb'},
+                 {_id: 'three', tag: 'cc'}]
+              );
+              done();
+            });
+          });
+        });
+      });
+
     });
   });
 
