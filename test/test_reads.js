@@ -45,7 +45,7 @@ describe('BedquiltCollection find ops', function() {
       });
     };
     var names = function(docs) {
-      return docs.map(function(doc) { return doc['name']; });
+      return docs.map(function(doc) { return doc['_id']; });
     };
 
     it('should skip two documents', function(done) {
@@ -54,11 +54,28 @@ describe('BedquiltCollection find ops', function() {
           var things = client.collection('things');
           things.find({}, {skip: 2}, function(err, result) {
             should.equal(result.length, 6);
+            should.deepEqual(names(result), ['irene', 'mary', 'brian',
+                                             'dave', 'kate', 'alice']);
             done();
           });
         });
       });
     });
+
+    it('should skip two documents and limit to three', function(done) {
+      populate(function() {
+        testutils.connect(function(err, client) {
+          var things = client.collection('things');
+          things.find({}, {skip: 2, limit: 3}, function(err, result) {
+            should.equal(result.length, 3);
+            should.deepEqual(names(result), ['irene', 'mary', 'brian']);
+            done();
+          });
+        });
+      });
+    });
+
+
   });
 
   describe('BedquiltCollection#count()', function() {
