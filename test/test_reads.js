@@ -1,4 +1,5 @@
-/*jslint node: true*/
+/*jshint node: true*/
+/*jshint esnext: true*/
 /*global require, describe, it, before, beforeEach, after, afterEach */
 "use strict";
 
@@ -7,55 +8,55 @@ var testutils = require('./testutils.js');
 var async = require('async');
 
 
-describe('BedquiltCollection find ops', function() {
+describe('BedquiltCollection find ops', () => {
 
-  describe('BedquiltCollection#find() with skip, limit and sort', function() {
+  describe('BedquiltCollection#find() with skip, limit and sort', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
 
-    var populate = function(callback) {
-      testutils.connect(function(err, client) {
+    var populate = (callback) => {
+      testutils.connect((err, client) => {
         var things = client.collection('things');
         async.series([
-          function(callback) {
+          (callback) => {
             things.save({name: 'sarah', age: 22}, callback);
           },
-          function(callback) {
+          (callback) => {
             things.save({name: 'mike', age: 20}, callback);
           },
-          function(callback) {
+          (callback) => {
             things.save({name: 'irene', age: 40}, callback);
           },
-          function(callback) {
+          (callback) => {
             things.save({name: 'mary', age: 16}, callback);
           },
-          function(callback) {
+          (callback) => {
             things.save({name: 'brian', age: 31}, callback);
           },
-          function(callback) {
+          (callback) => {
             things.save({name: 'dave', age: 22}, callback);
           },
-          function(callback) {
+          (callback) => {
             things.save({name: 'kate', age: 25}, callback);
           },
-          function(callback) {
+          (callback) => {
             things.save({name: 'alice', age: 57}, callback);
           }
-        ], function(err, results) { callback(); });
+        ], (err, results) => { callback(); });
       });
     };
     var names = function(docs) {
-      return docs.map(function(doc) { return doc.name; });
+      return docs.map((doc) => { return doc.name; });
     };
     var ages = function(docs) {
-      return docs.map(function(doc) { return doc.age; });
+      return docs.map((doc) => { return doc.age; });
     };
 
-    it('should skip two documents', function(done) {
-      populate(function() {
-        testutils.connect(function(err, client) {
+    it('should skip two documents', (done) => {
+      populate(() => {
+        testutils.connect((err, client) => {
           var things = client.collection('things');
-          things.find({}, {skip: 2}, function(err, result) {
+          things.find({}, {skip: 2}, (err, result) => {
             should.equal(result.length, 6);
             should.deepEqual(names(result), ['irene', 'mary', 'brian',
                                              'dave', 'kate', 'alice']);
@@ -65,11 +66,11 @@ describe('BedquiltCollection find ops', function() {
       });
     });
 
-    it('should skip two documents and limit to three', function(done) {
-      populate(function() {
-        testutils.connect(function(err, client) {
+    it('should skip two documents and limit to three', (done) => {
+      populate(() => {
+        testutils.connect((err, client) => {
           var things = client.collection('things');
-          things.find({}, {skip: 2, limit: 3}, function(err, result) {
+          things.find({}, {skip: 2, limit: 3}, (err, result) => {
             should.equal(result.length, 3);
             should.deepEqual(names(result), ['irene', 'mary', 'brian']);
             done();
@@ -78,11 +79,11 @@ describe('BedquiltCollection find ops', function() {
       });
     });
 
-    it('should limit to four documents', function(done) {
-      populate(function() {
-        testutils.connect(function(err, client) {
+    it('should limit to four documents', (done) => {
+      populate(() => {
+        testutils.connect((err, client) => {
           var things = client.collection('things');
-          things.find({}, {limit: 4}, function(err, result) {
+          things.find({}, {limit: 4}, (err, result) => {
             should.equal(result.length, 4);
             should.deepEqual(names(result), ['sarah', 'mike', 'irene', 'mary']);
             done();
@@ -91,13 +92,13 @@ describe('BedquiltCollection find ops', function() {
       });
     });
 
-    describe('with sort', function() {
+    describe('with sort', () => {
 
-      it('should order correctly ascending', function(done) {
-        populate(function() {
-          testutils.connect(function(err, client) {
+      it('should order correctly ascending', (done) => {
+        populate(() => {
+          testutils.connect((err, client) => {
             var things = client.collection('things');
-            things.find({}, {sort: [{'age': 1}]}, function(err, result) {
+            things.find({}, {sort: [{'age': 1}]}, (err, result) => {
               should.equal(result.length, 8);
               var a = ages(result);
               var sorted = a.slice().sort();
@@ -108,11 +109,11 @@ describe('BedquiltCollection find ops', function() {
         });
       });
 
-      it('should order correctly ascending', function(done) {
-        populate(function() {
-          testutils.connect(function(err, client) {
+      it('should order correctly ascending', (done) => {
+        populate(() => {
+          testutils.connect((err, client) => {
             var things = client.collection('things');
-            things.find({}, {sort: [{'age': -1}]}, function(err, result) {
+            things.find({}, {sort: [{'age': -1}]}, (err, result) => {
               should.equal(result.length, 8);
               var a = ages(result);
               var sorted = a.slice().sort().reverse();
@@ -123,12 +124,12 @@ describe('BedquiltCollection find ops', function() {
         });
       });
 
-      it('should order correctly ascending with skip and limit', function(done) {
-        populate(function() {
-          testutils.connect(function(err, client) {
+      it('should order correctly ascending with skip and limit', (done) => {
+        populate(() => {
+          testutils.connect((err, client) => {
             var things = client.collection('things');
             var opts = {skip: 2, limit: 3, sort: [{age: 1}]};
-            things.find({}, opts, function(err, result) {
+            things.find({}, opts, (err, result) => {
               should.equal(result.length, 3);
               should.deepEqual(ages(result), [22, 22, 25]);
               should.deepEqual(names(result), ['sarah', 'dave', 'kate']);
@@ -138,12 +139,12 @@ describe('BedquiltCollection find ops', function() {
         });
       });
 
-      it('should order correctly descending with skip and limit', function(done) {
-        populate(function() {
-          testutils.connect(function(err, client) {
+      it('should order correctly descending with skip and limit', (done) => {
+        populate(() => {
+          testutils.connect((err, client) => {
             var things = client.collection('things');
             var opts = {skip: 2, limit: 3, sort: [{age: -1}]};
-            things.find({}, opts, function(err, result) {
+            things.find({}, opts, (err, result) => {
               should.equal(result.length, 3);
               should.deepEqual(ages(result), [31, 25, 22]);
               should.deepEqual(names(result), ['brian', 'kate', 'sarah']);
@@ -154,12 +155,12 @@ describe('BedquiltCollection find ops', function() {
       });
 
       // TODO: multisort
-      it('should order by age and then by name', function(done) {
-        populate(function() {
-          testutils.connect(function(err, client) {
+      it('should order by age and then by name', (done) => {
+        populate(() => {
+          testutils.connect((err, client) => {
             var things = client.collection('things');
             var opts = {limit: 5, sort: [{age: 1}, {name: 1}]};
-            things.find({}, opts, function(err, result) {
+            things.find({}, opts, (err, result) => {
               should.equal(result.length, 5);
               should.deepEqual(ages(result), [16, 20, 22, 22, 25]);
               should.deepEqual(
@@ -175,12 +176,12 @@ describe('BedquiltCollection find ops', function() {
         });
       });
 
-      it('should order by age and then by name descending', function(done) {
-        populate(function() {
-          testutils.connect(function(err, client) {
+      it('should order by age and then by name descending', (done) => {
+        populate(() => {
+          testutils.connect((err, client) => {
             var things = client.collection('things');
             var opts = {limit: 5, sort: [{age: 1}, {name: -1}]};
-            things.find({}, opts, function(err, result) {
+            things.find({}, opts, (err, result) => {
               should.equal(result.length, 5);
               should.deepEqual(ages(result), [16, 20, 22, 22, 25]);
               should.deepEqual(
@@ -200,22 +201,22 @@ describe('BedquiltCollection find ops', function() {
     });
   });
 
-  describe('BedquiltCollection#count()', function() {
+  describe('BedquiltCollection#count()', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
 
-    it('should return zero on non-existant collection', function(done) {
-      testutils.connect(function(err, client) {
+    it('should return zero on non-existant collection', (done) => {
+      testutils.connect((err, client) => {
         var things = client.collection('things');
-        things.count({}, function(err, result) {
+        things.count({}, (err, result) => {
           should.equal(result, 0);
           done();
         });
       });
     });
 
-    it('sould return count of documents in collection', function(done) {
-      testutils.connect(function(err, client) {
+    it('sould return count of documents in collection', (done) => {
+      testutils.connect((err, client) => {
         var things = client.collection('things');
         async.series(
           [
@@ -230,7 +231,7 @@ describe('BedquiltCollection find ops', function() {
             }
           ],
           function(err, results) {
-            things.count({}, function(err, result) {
+            things.count({}, (err, result) => {
               should.equal(3, result);
               done();
             });
@@ -240,15 +241,15 @@ describe('BedquiltCollection find ops', function() {
     });
   });
 
-  describe('BedquiltCollection#find()', function() {
+  describe('BedquiltCollection#find()', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
 
-    describe('on non-existant collection', function() {
-      it('should return empty list', function(done) {
-        testutils.connect(function(err, client) {
+    describe('on non-existant collection', () => {
+      it('should return empty list', (done) => {
+        testutils.connect((err, client) => {
           var things = client.collection('things');
-          things.find({}, function(err, result) {
+          things.find({}, (err, result) => {
             should.equal(0, result.length);
             done();
           });
@@ -256,11 +257,11 @@ describe('BedquiltCollection find ops', function() {
       });
     });
 
-    describe('on empty collection', function() {
-      it('should return empty list', function(done) {
-        testutils.connect(function(err, client) {
+    describe('on empty collection', () => {
+      it('should return empty list', (done) => {
+        testutils.connect((err, client) => {
           var things = client.collection('things');
-          things.find({}, function(err, result) {
+          things.find({}, (err, result) => {
             should.equal(0, result.length);
             done();
           });
@@ -268,13 +269,13 @@ describe('BedquiltCollection find ops', function() {
       });
     });
 
-    describe('empty query doc', function() {
-      beforeEach(function(done) {
-        testutils.cleanDatabase(function(err, result) {
+    describe('empty query doc', () => {
+      beforeEach((done) => {
+        testutils.cleanDatabase((err, result) => {
           if(err) {
             throw err;
           }
-          testutils.connect(function(err, client) {
+          testutils.connect((err, client) => {
             var things = client.collection('things');
             async.series([
                 function(callback) {
@@ -297,10 +298,10 @@ describe('BedquiltCollection find ops', function() {
         });
       });
 
-      it('should return entire collection', function(done) {
-        testutils.connect(function(err, client) {
+      it('should return entire collection', (done) => {
+        testutils.connect((err, client) => {
           var things = client.collection('things');
-          things.find({}, function(err, result) {
+          things.find({}, (err, result) => {
             should.equal(5, result.length);
             should.deepEqual({_id: 'one', tag: 'aa'}, result[0]);
             done();
@@ -308,10 +309,10 @@ describe('BedquiltCollection find ops', function() {
         });
       });
 
-      it('should return one document when matching _id', function(done) {
-        testutils.connect(function(err, client) {
+      it('should return one document when matching _id', (done) => {
+        testutils.connect((err, client) => {
           var things =client.collection('things');
-          things.find({_id: 'two'}, function(err, result) {
+          things.find({_id: 'two'}, (err, result) => {
             should.equal(result.length, 1);
             should.deepEqual(result[0], {_id: 'two', tag: 'bb'});
             done();
@@ -319,10 +320,10 @@ describe('BedquiltCollection find ops', function() {
         });
       });
 
-      it('should return two documents when they match', function(done) {
-        testutils.connect(function(err, client) {
+      it('should return two documents when they match', (done) => {
+        testutils.connect((err, client) => {
           var things = client.collection('things');
-          things.find({tag: 'aa'}, function(err, result) {
+          things.find({tag: 'aa'}, (err, result) => {
             should.equal(result.length, 2);
             should.deepEqual([
               {_id: 'one', tag: 'aa'},
@@ -333,11 +334,11 @@ describe('BedquiltCollection find ops', function() {
         });
       });
 
-      describe('with skip and limit', function() {
-        it('should return the right docs', function(done) {
-          testutils.connect(function(err, client) {
+      describe('with skip and limit', () => {
+        it('should return the right docs', (done) => {
+          testutils.connect((err, client) => {
             var things = client.collection('things');
-            things.find({}, {skip: 1, limit: 2}, function(err, result) {
+            things.find({}, {skip: 1, limit: 2}, (err, result) => {
               should.equal(result.length, 2);
               should.deepEqual(
                 result,

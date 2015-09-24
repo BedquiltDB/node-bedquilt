@@ -1,4 +1,5 @@
-/*jslint node: true*/
+/*jshint node: true*/
+/*jshint esnext: true*/
 /*global require, describe, it, before, beforeEach, after, afterEach */
 "use strict";
 
@@ -6,22 +7,22 @@ var should = require("should");
 var testutils = require('./testutils.js');
 var async = require('async');
 
-describe('BedquiltCollection constraint ops', function() {
+describe('BedquiltCollection constraint ops', () => {
 
-  describe('BedquiltCollection#addConstraints()', function() {
+  describe('BedquiltCollection#addConstraints()', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
 
-    it('should add a simple constraint', function(done) {
-      testutils.connect(function(err, client) {
+    it('should add a simple constraint', (done) => {
+      testutils.connect((err, client) => {
         var things = client.collection('things');
         var constraints = {
           name: {$required: 1,
                  $notnull: 1}
         };
-        things.addConstraints(constraints, function(err, result) {
+        things.addConstraints(constraints, (err, result) => {
           should.equal(result, true);
-          things.save({wat: 1}, function(err, result) {
+          things.save({wat: 1}, (err, result) => {
             should.notEqual(err, null);
             should.equal(result, null);
             done();
@@ -30,8 +31,8 @@ describe('BedquiltCollection constraint ops', function() {
       });
     });
 
-    it('should work with a more complex constraint', function(done) {
-      testutils.connect(function(err, client) {
+    it('should work with a more complex constraint', (done) => {
+      testutils.connect((err, client) => {
         var people = client.collection('people');
         var spec = {
           name: {
@@ -53,7 +54,7 @@ describe('BedquiltCollection constraint ops', function() {
             $type: 'string'
           }
         };
-        people.addConstraints(spec, function(err, result) {
+        people.addConstraints(spec, (err, result) => {
           should.equal(result, true);
           done();
         });
@@ -62,22 +63,22 @@ describe('BedquiltCollection constraint ops', function() {
 
   });
 
-  describe('BedquiltCollection#listConstraints()', function() {
+  describe('BedquiltCollection#listConstraints()', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
 
-    it('should list all constraints', function(done) {
-      testutils.connect(function(err, client) {
+    it('should list all constraints', (done) => {
+      testutils.connect((err, client) => {
         var things = client.collection('things');
         var constraints = {
           name: {$required: 1,
                  $notnull: 1}
         };
-        things.listConstraints(function(err, result) {
+        things.listConstraints((err, result) => {
           should.deepEqual(result, []);
-          things.addConstraints(constraints, function(err, result) {
+          things.addConstraints(constraints, (err, result) => {
             should.equal(result, true);
-            things.listConstraints(function(err, result) {
+            things.listConstraints((err, result) => {
               should.deepEqual(result, ['name:notnull', 'name:required']);
               done();
             });
@@ -87,25 +88,25 @@ describe('BedquiltCollection constraint ops', function() {
     });
   });
 
-  describe('BedquiltCollection#removeConstraints()', function() {
+  describe('BedquiltCollection#removeConstraints()', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
 
-    it('should remove constraints', function(done) {
-      testutils.connect(function(err, client) {
+    it('should remove constraints', (done) => {
+      testutils.connect((err, client) => {
         var things = client.collection('things');
         var constraints = {
           name: {$required: 1,
                  $notnull: 1}
         };
-        things.addConstraints(constraints, function(err, result) {
+        things.addConstraints(constraints, (err, result) => {
           should.equal(result, true);
-          things.save({wat: 1}, function(err, result) {
+          things.save({wat: 1}, (err, result) => {
             should.notEqual(err, null);
             should.equal(result, null);
-            things.removeConstraints(constraints, function(err, result) {
+            things.removeConstraints(constraints, (err, result) => {
               should.equal(result, true);
-              things.insert({wat: 1}, function(err, result) {
+              things.insert({wat: 1}, (err, result) => {
                 should.equal(err, null);
                 done();
               });

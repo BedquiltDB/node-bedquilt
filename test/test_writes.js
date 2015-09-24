@@ -1,4 +1,5 @@
-/*jslint node: true*/
+/*jshint node: true*/
+/*jshint esnext: true*/
 /*global require, describe, it, before, beforeEach, after, afterEach */
 "use strict";
 
@@ -6,24 +7,24 @@ var should = require("should");
 var testutils = require('./testutils.js');
 var async = require('async');
 
-describe('BedquiltCollection write ops', function() {
+describe('BedquiltCollection write ops', () => {
 
-  describe('BedquiltCollection#remove()', function() {
+  describe('BedquiltCollection#remove()', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
 
-    it('should do nothing on empty collection', function(done) {
-      testutils.connect(function(err, client) {
+    it('should do nothing on empty collection', (done) => {
+      testutils.connect((err, client) => {
         var things = client.collection('things');
-        things.remove({tag: 'aa'}, function(err, result) {
+        things.remove({tag: 'aa'}, (err, result) => {
           should.equal(result, 0);
           done();
         });
       });
     });
 
-    it('should remove documents from collection', function(done) {
-      testutils.connect(function(err, client) {
+    it('should remove documents from collection', (done) => {
+      testutils.connect((err, client) => {
         var things = client.collection('things');
 
         async.series([
@@ -37,9 +38,9 @@ describe('BedquiltCollection write ops', function() {
             things.insert({tag: 'aa'}, callback);
           },
         ], function(err, results) {
-          things.remove({tag: 'aa'}, function(err, result) {
+          things.remove({tag: 'aa'}, (err, result) => {
             should.equal(result, 2);
-            things.count({}, function(err, result) {
+            things.count({}, (err, result) => {
               should.equal(1, result);
               done();
             });
@@ -49,22 +50,22 @@ describe('BedquiltCollection write ops', function() {
     });
   });
 
-  describe('BedquiltCollection#removeOne()', function() {
+  describe('BedquiltCollection#removeOne()', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
 
-    it('should do nothing on empty collection', function(done) {
-      testutils.connect(function(err, client) {
+    it('should do nothing on empty collection', (done) => {
+      testutils.connect((err, client) => {
         var things = client.collection('things');
-        things.removeOne({tag: 'aa'}, function(err, result) {
+        things.removeOne({tag: 'aa'}, (err, result) => {
           should.equal(result, 0);
           done();
         });
       });
     });
 
-    it('should remove documents from collection', function(done) {
-      testutils.connect(function(err, client) {
+    it('should remove documents from collection', (done) => {
+      testutils.connect((err, client) => {
         var things = client.collection('things');
 
         async.series([
@@ -78,11 +79,11 @@ describe('BedquiltCollection write ops', function() {
             things.insert({tag: 'aa'}, callback);
           },
         ], function(err, results) {
-          things.removeOne({tag: 'aa'}, function(err, result) {
+          things.removeOne({tag: 'aa'}, (err, result) => {
             should.equal(result, 1);
-            things.count({}, function(err, result) {
+            things.count({}, (err, result) => {
               should.equal(2, result);
-              things.count({tag: 'aa'}, function(err, result) {
+              things.count({tag: 'aa'}, (err, result) => {
                 should.equal(1, result);
                 done();
               });
@@ -94,22 +95,22 @@ describe('BedquiltCollection write ops', function() {
   });
 
 
-  describe('BedquiltCollection#removeOneById()', function() {
+  describe('BedquiltCollection#removeOneById()', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
 
-    it('should do nothing on empty collection', function(done) {
-      testutils.connect(function(err, client) {
+    it('should do nothing on empty collection', (done) => {
+      testutils.connect((err, client) => {
         var things = client.collection('things');
-        things.removeOneById('one', function(err, result) {
+        things.removeOneById('one', (err, result) => {
           should.equal(result, 0);
           done();
         });
       });
     });
 
-    it('should remove documents from collection', function(done) {
-      testutils.connect(function(err, client) {
+    it('should remove documents from collection', (done) => {
+      testutils.connect((err, client) => {
         var things = client.collection('things');
 
         async.series([
@@ -123,11 +124,11 @@ describe('BedquiltCollection write ops', function() {
             things.insert({_id: 'three', tag: 'aa'}, callback);
           },
         ], function(err, results) {
-          things.removeOneById('one', function(err, result) {
+          things.removeOneById('one', (err, result) => {
             should.equal(result, 1);
-            things.count({}, function(err, result) {
+            things.count({}, (err, result) => {
               should.equal(2, result);
-              things.count({tag: 'aa'}, function(err, result) {
+              things.count({tag: 'aa'}, (err, result) => {
                 should.equal(1, result);
                 done();
               });
@@ -140,21 +141,21 @@ describe('BedquiltCollection write ops', function() {
 
 
 
-  describe('BedquiltCollection#insert()', function() {
+  describe('BedquiltCollection#insert()', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
 
-    it('should return _id of document', function(done) {
-      testutils.connect(function(err, client) {
+    it('should return _id of document', (done) => {
+      testutils.connect((err, client) => {
         var things = client.collection('things');
         var doc = {
           _id: 'spanner',
           description: 'A small spanner'
         };
-        things.insert(doc, function(err, result) {
+        things.insert(doc, (err, result) => {
           should.equal(null, err);
           should.equal('spanner', result);
-          things.count({}, function(err, result) {
+          things.count({}, (err, result) => {
             should.equal(null, err);
             should.equal(1, result);
             done();
@@ -164,21 +165,21 @@ describe('BedquiltCollection write ops', function() {
     });
   });
 
-  describe('BedquiltCollection#save()', function() {
+  describe('BedquiltCollection#save()', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
 
-    it('should return _id of document', function(done) {
-      testutils.connect(function(err, client) {
+    it('should return _id of document', (done) => {
+      testutils.connect((err, client) => {
         var things = client.collection('things');
         var doc = {
           _id: 'spanner',
           description: 'A small spanner'
         };
-        things.save(doc, function(err, result) {
+        things.save(doc, (err, result) => {
           should.equal(null, err);
           should.equal('spanner', result);
-          things.count({}, function(err, result) {
+          things.count({}, (err, result) => {
             should.equal(null, err);
             should.equal(1, result);
             done();
@@ -187,19 +188,19 @@ describe('BedquiltCollection write ops', function() {
       });
     });
 
-    it('should update document in place', function(done) {
-      testutils.connect(function(err, client) {
+    it('should update document in place', (done) => {
+      testutils.connect((err, client) => {
         var things = client.collection('things');
         var doc = {
           _id: 'spanner',
           description: 'A small spanner'
         };
-        things.save(doc, function(err, result) {
+        things.save(doc, (err, result) => {
           var _id = result;
-          things.findOneById(_id, function(err, result) {
+          things.findOneById(_id, (err, result) => {
             should.notEqual(result['tag'], 'aaa');
             result['tag'] = 'aaa';
-            things.save(result, function(err, result) {
+            things.save(result, (err, result) => {
               should.equal(err, null);
               should.equal('spanner', result);
               things.findOneById(result, function(err, spanner) {

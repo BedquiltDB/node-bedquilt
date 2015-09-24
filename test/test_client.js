@@ -1,4 +1,5 @@
-/*jslint node: true*/
+/*jshint node: true*/
+/*jshint esnext: true*/
 /*global require, describe, it, before, beforeEach, after, afterEach */
 "use strict";
 
@@ -7,16 +8,16 @@ var BedquiltClient = require('../index.js').BedquiltClient;
 var testutils = require('./testutils.js');
 var async = require('async');
 
-describe('BedquiltClient', function() {
+describe('BedquiltClient', () => {
 
-  describe('BedquiltClient#connect()', function() {
+  describe('BedquiltClient#connect()', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
 
-    it('should connect', function(done) {
+    it('should connect', (done) => {
       BedquiltClient.connect(
         testutils.connectionString,
-        function(err, client) {
+        (err, client) => {
           should.equal(err, null);
           should.notEqual(client, null);
           should.equal(client.connectionString, testutils.connectionString);
@@ -26,15 +27,15 @@ describe('BedquiltClient', function() {
 
   });
 
-  describe('BedquiltClient#query', function() {
+  describe('BedquiltClient#query', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
 
-    it('should allow us to query', function(done) {
-      testutils.connect(function(err, client) {
+    it('should allow us to query', (done) => {
+      testutils.connect((err, client) => {
         client._query('select 1 as num', [],
-                  function(r) { return r; },
-                  function(err, result) {
+                  (r) => { return r; },
+                  (err, result) => {
           should.equal(err, null);
           should.equal(result.rows[0]['num'], 1);
           done();
@@ -44,13 +45,13 @@ describe('BedquiltClient', function() {
 
   });
 
-  describe('BedquiltClient#createCollection', function() {
+  describe('BedquiltClient#createCollection', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
 
-    it('should create a collection', function(done) {
-      testutils.connect(function(err, client) {
-        client.createCollection('stuff', function(err, created) {
+    it('should create a collection', (done) => {
+      testutils.connect((err, client) => {
+        client.createCollection('stuff', (err, created) => {
           should.equal(err, null);
           should.equal(created, true);
           done();
@@ -60,13 +61,13 @@ describe('BedquiltClient', function() {
   });
 
 
-  describe('BedquiltClient#deleteCollection', function() {
+  describe('BedquiltClient#deleteCollection', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
 
-    it('should not delete a collection which does not exist', function(done) {
-      testutils.connect(function(err, client) {
-        client.deleteCollection('stuff', function(err, deleted) {
+    it('should not delete a collection which does not exist', (done) => {
+      testutils.connect((err, client) => {
+        client.deleteCollection('stuff', (err, deleted) => {
           should.equal(err, null);
           should.equal(deleted, false);
           done();
@@ -74,13 +75,13 @@ describe('BedquiltClient', function() {
       });
     });
 
-    it("should delete a collection", function(done) {
-      testutils.connect(function(err, client) {
-        client.createCollection('stuff', function(err, created) {
-          client.deleteCollection('stuff', function(err, deleted) {
+    it("should delete a collection", (done) => {
+      testutils.connect((err, client) => {
+        client.createCollection('stuff', (err, created) => {
+          client.deleteCollection('stuff', (err, deleted) => {
             should.equal(err, null);
             should.equal(deleted, true);
-            client.deleteCollection('stuff', function(err, deleted) {
+            client.deleteCollection('stuff', (err, deleted) => {
               should.equal(deleted, false);
               done();
             });
@@ -90,14 +91,14 @@ describe('BedquiltClient', function() {
     });
   });
 
-  describe('BedquiltClien#listCollections', function() {
+  describe('BedquiltClien#listCollections', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
 
-    it('should return 0 when there are no collections', function(done) {
+    it('should return 0 when there are no collections', (done) => {
       // with no collections
-      testutils.connect(function(err, client) {
-        client.listCollections(function(err, result) {
+      testutils.connect((err, client) => {
+        client.listCollections((err, result) => {
           should.equal(err, null);
           should.equal(result.length, 0);
           done();
@@ -105,15 +106,15 @@ describe('BedquiltClient', function() {
       });
     });
 
-    it('should return 1 when there is one collection', function(done) {
-      testutils.connect(function(err, client) {
-        client.listCollections(function(err, result) {
+    it('should return 1 when there is one collection', (done) => {
+      testutils.connect((err, client) => {
+        client.listCollections((err, result) => {
           should.equal(err, null);
           should.equal(result.length, 0);
-          client.createCollection('things', function(err, created) {
+          client.createCollection('things', (err, created) => {
             should.equal(err, null);
             should.equal(created, true);
-            client.listCollections(function(err, collections) {
+            client.listCollections((err, collections) => {
               should.equal(collections.length, 1);
               should.equal(collections[0], 'things');
               done();
