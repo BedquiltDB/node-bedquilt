@@ -18,34 +18,34 @@ describe('BedquiltCollection find ops', function() {
         var things = client.collection('things');
         async.series([
           function(callback) {
-            things.save({_id: 'sarah', age: 22}, callback);
+            things.save({name: 'sarah', age: 22}, callback);
           },
           function(callback) {
-            things.save({_id: 'mike', age: 20}, callback);
+            things.save({name: 'mike', age: 20}, callback);
           },
           function(callback) {
-            things.save({_id: 'irene', age: 40}, callback);
+            things.save({name: 'irene', age: 40}, callback);
           },
           function(callback) {
-            things.save({_id: 'mary', age: 16}, callback);
+            things.save({name: 'mary', age: 16}, callback);
           },
           function(callback) {
-            things.save({_id: 'brian', age: 31}, callback);
+            things.save({name: 'brian', age: 31}, callback);
           },
           function(callback) {
-            things.save({_id: 'dave', age: 22}, callback);
+            things.save({name: 'dave', age: 22}, callback);
           },
           function(callback) {
-            things.save({_id: 'kate', age: 25}, callback);
+            things.save({name: 'kate', age: 25}, callback);
           },
           function(callback) {
-            things.save({_id: 'alice', age: 57}, callback);
+            things.save({name: 'alice', age: 57}, callback);
           }
         ], function(err, results) { callback(); });
       });
     };
     var names = function(docs) {
-      return docs.map(function(doc) { return doc._id; });
+      return docs.map(function(doc) { return doc.name; });
     };
     var ages = function(docs) {
       return docs.map(function(doc) { return doc.age; });
@@ -152,6 +152,51 @@ describe('BedquiltCollection find ops', function() {
           });
         });
       });
+
+      // TODO: multisort
+      it('should order by age and then by name', function(done) {
+        populate(function() {
+          testutils.connect(function(err, client) {
+            var things = client.collection('things');
+            var opts = {limit: 5, sort: [{age: 1}, {name: 1}]};
+            things.find({}, opts, function(err, result) {
+              should.equal(result.length, 5);
+              should.deepEqual(ages(result), [16, 20, 22, 22, 25]);
+              should.deepEqual(
+                names(result),
+                ['mary',
+                 'mike',
+                 'dave',
+                 'sarah',
+                 'kate']);
+              done();
+            });
+          });
+        });
+      });
+
+      it('should order by age and then by name descending', function(done) {
+        populate(function() {
+          testutils.connect(function(err, client) {
+            var things = client.collection('things');
+            var opts = {limit: 5, sort: [{age: 1}, {name: -1}]};
+            things.find({}, opts, function(err, result) {
+              should.equal(result.length, 5);
+              should.deepEqual(ages(result), [16, 20, 22, 22, 25]);
+              should.deepEqual(
+                names(result),
+                ['mary',
+                 'mike',
+                 'sarah',
+                 'dave',
+                 'kate']
+              );
+              done();
+            });
+          });
+        });
+      });
+
     });
   });
 
