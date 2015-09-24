@@ -45,10 +45,10 @@ describe('BedquiltCollection find ops', function() {
       });
     };
     var names = function(docs) {
-      return docs.map(function(doc) { return doc['_id']; });
+      return docs.map(function(doc) { return doc._id; });
     };
     var ages = function(docs) {
-      return docs.map(function(doc) { return doc['age']; });
+      return docs.map(function(doc) { return doc.age; });
     };
 
     it('should skip two documents', function(done) {
@@ -97,7 +97,7 @@ describe('BedquiltCollection find ops', function() {
         populate(function() {
           testutils.connect(function(err, client) {
             var things = client.collection('things');
-            things.find({}, {sort: {'age': 1}}, function(err, result) {
+            things.find({}, {sort: [{'age': 1}]}, function(err, result) {
               should.equal(result.length, 8);
               var a = ages(result);
               var sorted = a.slice().sort();
@@ -112,7 +112,7 @@ describe('BedquiltCollection find ops', function() {
         populate(function() {
           testutils.connect(function(err, client) {
             var things = client.collection('things');
-            things.find({}, {sort: {'age': -1}}, function(err, result) {
+            things.find({}, {sort: [{'age': -1}]}, function(err, result) {
               should.equal(result.length, 8);
               var a = ages(result);
               var sorted = a.slice().sort().reverse();
@@ -127,7 +127,7 @@ describe('BedquiltCollection find ops', function() {
         populate(function() {
           testutils.connect(function(err, client) {
             var things = client.collection('things');
-            var opts = {skip: 2, limit: 3, sort: {age: 1}};
+            var opts = {skip: 2, limit: 3, sort: [{age: 1}]};
             things.find({}, opts, function(err, result) {
               should.equal(result.length, 3);
               should.deepEqual(ages(result), [22, 22, 25]);
@@ -142,7 +142,7 @@ describe('BedquiltCollection find ops', function() {
         populate(function() {
           testutils.connect(function(err, client) {
             var things = client.collection('things');
-            var opts = {skip: 2, limit: 3, sort: {age: -1}};
+            var opts = {skip: 2, limit: 3, sort: [{age: -1}]};
             things.find({}, opts, function(err, result) {
               should.equal(result.length, 3);
               should.deepEqual(ages(result), [31, 25, 22]);
