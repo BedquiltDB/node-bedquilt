@@ -1,9 +1,10 @@
 # node-bedquilt makefile
+MOCHA = ./node_modules/mocha/bin/mocha
 
 all: docs test
 
 test:
-	mocha
+	$(MOCHA)
 
 docs:
 	echo 'Nope'
