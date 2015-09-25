@@ -1,17 +1,18 @@
-/* jslint node: true */
+/* jshint node: true */
+/* jshint esnext: true */
 "use strict";
 
 var pg = require('pg');
 var BedquiltClient = require('../index.js').BedquiltClient;
 var connectionString = 'postgres://localhost/bedquilt_test';
 
-var cleanDatabase = function(callback) {
-  pg.connect(connectionString, function(err, client, done) {
+var cleanDatabase = (callback) => {
+  pg.connect(connectionString, (err, client, done) => {
     var query = "drop schema public cascade;" +
                 "create schema public; " +
                 "create extension pgcrypto;" +
                 "create extension bedquilt;";
-    client.query(query, [], function(err, result) {
+    client.query(query, [], (err, result) => {
       if(err) {
         throw err;
       } else {
@@ -22,7 +23,7 @@ var cleanDatabase = function(callback) {
   });
 };
 
-var connect = function(callback) {
+var connect = (callback) => {
   BedquiltClient.connect(connectionString, callback);
 };
 
