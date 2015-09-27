@@ -113,10 +113,15 @@ The callback function should take two parameters, `err` and `result`, where resu
 
 ### `#find`
 
-Params: `queryDoc::Object`, `callback::Function`
+Params: `queryDoc::Object`, `options::Object (optional)`, `callback::Function`
 
 Find documents in the collection, matching the supplied query document.
 The callback function should take two parameters, `err` and `result`, where result is an Array of Objects.
+The options object may contain the following fields:
+
+- `sort`: Array of sort specs, example: `{sort: [{lastUpdate: 1, name: -1}]`
+- `skip`: Number of documents to skip, default 0
+- `limit`: Number of documents to limit result set to, default `null`
 
 ----
 
