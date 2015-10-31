@@ -3,6 +3,8 @@ node-bedquilt
 
 The nodejs driver for [BedquiltDB](http://bedquiltdb.github.io)
 
+Requires `node` >= 4.0.0
+
 
 ## Install
 
