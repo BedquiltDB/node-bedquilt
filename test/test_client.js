@@ -91,6 +91,33 @@ describe('BedquiltClient', () => {
     });
   });
 
+  describe('BedquiltClient#collectionExists', () => {
+    beforeEach(testutils.cleanDatabase);
+    afterEach(testutils.cleanDatabase);
+
+    it('should return false when the collection does not exist', (done) => {
+      testutils.connect((err, client) => {
+        client.collectionExists('stuff', (err, result) => {
+          should.equal(err, null);
+          should.equal(result, false);
+          done();
+        });
+      });
+    });
+
+    it('should return true when the collection exists', (done) => {
+      testutils.connect((err, client) => {
+        client.createCollection('stuff', (err, result) => {
+          client.collectionExists('stuff', (err, result) => {
+            should.equal(err, null);
+            should.equal(result, true);
+            done();
+          });
+        });
+      });
+    });
+  });
+
   describe('BedquiltClien#listCollections', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
