@@ -241,6 +241,46 @@ describe('BedquiltCollection find ops', () => {
     });
   });
 
+  describe('BedquiltCollection#distinct()', () => {
+    beforeEach(testutils.cleanDatabase);
+    afterEach(testutils.cleanDatabase);
+
+    it('should return empty list for non-existant collection', (done) => {
+      testutils.connect((err, client) => {
+        var things = client.collection('things');
+        things.distinct('name', (err, result) => {
+          should.deepEqual(result, []);
+          done();
+        });
+      });
+    });
+
+    it('sould return distinct values', (done) => {
+      testutils.connect((err, client) => {
+        var things = client.collection('things');
+        async.series(
+          [
+            function(callback) {
+              things.insert({name: 'aa'}, callback);
+            },
+            function(callback) {
+              things.insert({name: 'bb'}, callback);
+            },
+            function(callback) {
+              things.insert({name: 'aa'}, callback);
+            }
+          ],
+          function(err, results) {
+            things.distinct('name', (err, result) => {
+              should.deepEqual(['aa', 'bb'], result.sort());
+              done();
+            });
+          }
+        );
+      });
+    });
+  });
+
   describe('BedquiltCollection#find()', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
