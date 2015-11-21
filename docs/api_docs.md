@@ -146,6 +146,22 @@ The callback function should take two parameters, `err` and `result`, where resu
 
 ----
 
+### `#distinct`
+
+Params: `keyPath::String`, `callback::Function`
+
+Get a list of the distinct values present in a collection for the specified key.
+The keyPath string may be either the name of a top-level key in the collection,
+or a dotted path to a nested key.
+
+Example:
+```
+coll.distinct('address.city', (err, result) => {
+    console.log(result); // ['Edinburgh', 'London', ...]
+})
+```
+
+
 
 ### `#remove`
 
