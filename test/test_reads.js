@@ -338,6 +338,22 @@ describe('BedquiltCollection find ops', () => {
         });
       });
 
+      it('should return a query object', (done) => {
+        testutils.connect((err, client) => {
+          var things = client.collection('things');
+          var query = things.find({});
+          var counter = 0;
+          query.on('row', (row) => {
+            counter++;
+          });
+          query.on('end', (result) => {
+            should.equal(counter, 5);
+            should.equal(result.rows.length, 5);
+            done();
+          });
+        });
+      });
+
       it('should return entire collection', (done) => {
         testutils.connect((err, client) => {
           var things = client.collection('things');
