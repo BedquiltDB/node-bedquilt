@@ -123,6 +123,31 @@ The options object may contain the following fields:
 - `skip`: Number of documents to skip, default 0
 - `limit`: Number of documents to limit result set to, default `null`
 
+The `find` method returns a `BedquiltQuery` object, which is an event emitter, emitting
+the following events:
+
+- `row`: fired when a row is retrieved from the database
+- `error`: fired when an error is encountered
+- `end`: fired when the query has finished
+
+This means you can omit the `callback` parameter to find, and subscribe to `row` events
+from the returned query object in order to access rows as they are returned from
+the database. Example:
+
+```javascript
+query = things.find({'type': 'tool'})
+query.on('row', (row) => {
+    console.log('>> got a row');
+    console.log(row); // -> {_id: 'abcd', ...'};
+});
+query.on('end', (result) => {
+    console.log('>> done');
+});
+```
+
+See `BedquiltQuery` below for more details.
+
+
 ----
 
 
@@ -192,5 +217,27 @@ Params: `id::String`, `callback::Function`
 Remove a single document from the collection, which has an `_id` field matching the supplied id string.
 The callback function should take two parameters, `err` and `result`, where result is a Number indicating
 the number of documents removed.
+
+----
+
+## `BedquiltQuery`
+
+An event-emitter representing a query in progress. Returned from all query operations,
+but only useful when returned from the `BedquiltCollection#find` method.
+
+### Events
+
+#### 'row': (row)
+
+Emitted when a row is retrieved from the database. Each row is a single json document.
+
+#### 'error': (error)
+
+Emitted when an error is encountered
+
+#### 'end': (result)
+
+Emitted when all rows have been retrieved. The result is an array of values, equivalent
+to the result that would be passed to a query callback.
 
 ----

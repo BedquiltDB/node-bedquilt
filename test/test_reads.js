@@ -348,7 +348,7 @@ describe('BedquiltCollection find ops', () => {
           });
           query.on('end', (result) => {
             should.equal(counter, 5);
-            should.equal(result.rows.length, 5);
+            should.equal(result.length, 5);
             done();
           });
         });

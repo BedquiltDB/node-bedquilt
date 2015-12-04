@@ -50,7 +50,7 @@ describe('BedquiltQuery events', () => {
         testutils.connect((err, client) => {
           let names = [];
           let things = client.collection('things');
-          let query = things.find({});
+          let query = things.find({}, (err, result) => {});
 
           query.on('row', (row) => {
             names.push(row.name);
