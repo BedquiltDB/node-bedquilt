@@ -5,7 +5,7 @@
 
 var should = require("should");
 var testutils = require('./testutils.js');
-var async = require('async');
+var Async = require('async');
 
 describe('BedquiltCollection constraint ops', () => {
 

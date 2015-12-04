@@ -5,7 +5,7 @@
 
 var should = require("should");
 var testutils = require('./testutils.js');
-var async = require('async');
+var Async = require('async');
 
 
 describe('BedquiltCollection find ops', () => {
@@ -17,7 +17,7 @@ describe('BedquiltCollection find ops', () => {
     var populate = (callback) => {
       testutils.connect((err, client) => {
         var things = client.collection('things');
-        async.series([
+        Async.series([
           (callback) => {
             things.save({name: 'sarah', age: 22}, callback);
           },
@@ -218,7 +218,7 @@ describe('BedquiltCollection find ops', () => {
     it('sould return count of documents in collection', (done) => {
       testutils.connect((err, client) => {
         var things = client.collection('things');
-        async.series(
+        Async.series(
           [
             function(callback) {
               things.insert({}, callback);
@@ -258,7 +258,7 @@ describe('BedquiltCollection find ops', () => {
     it('sould return distinct values', (done) => {
       testutils.connect((err, client) => {
         var things = client.collection('things');
-        async.series(
+        Async.series(
           [
             function(callback) {
               things.insert({name: 'aa'}, callback);
@@ -317,7 +317,7 @@ describe('BedquiltCollection find ops', () => {
           }
           testutils.connect((err, client) => {
             var things = client.collection('things');
-            async.series([
+            Async.series([
                 function(callback) {
                 things.save({_id: 'one', tag: 'aa'}, callback);
                 },

@@ -6,7 +6,7 @@
 var should = require("should");
 var BedquiltClient = require('../index.js').BedquiltClient;
 var testutils = require('./testutils.js');
-var async = require('async');
+var Async = require('async');
 
 describe('BedquiltClient', () => {
 

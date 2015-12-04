@@ -5,7 +5,7 @@
 
 var should = require("should");
 var testutils = require('./testutils.js');
-var async = require('async');
+var Async = require('async');
 
 describe('BedquiltCollection write ops', () => {
 
@@ -27,7 +27,7 @@ describe('BedquiltCollection write ops', () => {
       testutils.connect((err, client) => {
         var things = client.collection('things');
 
-        async.series([
+        Async.series([
           function(callback) {
             things.insert({tag: 'aa'}, callback);
           },
@@ -68,7 +68,7 @@ describe('BedquiltCollection write ops', () => {
       testutils.connect((err, client) => {
         var things = client.collection('things');
 
-        async.series([
+        Async.series([
           function(callback) {
             things.insert({tag: 'aa'}, callback);
           },
@@ -113,7 +113,7 @@ describe('BedquiltCollection write ops', () => {
       testutils.connect((err, client) => {
         var things = client.collection('things');
 
-        async.series([
+        Async.series([
           function(callback) {
             things.insert({_id: 'one', tag: 'aa'}, callback);
           },
