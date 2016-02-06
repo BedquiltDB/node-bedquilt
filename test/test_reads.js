@@ -201,6 +201,100 @@ describe('BedquiltCollection find ops', () => {
     });
   });
 
+  describe('BedquiltCollection#findOneById()', () => {
+    beforeEach(testutils.cleanDatabase);
+    afterEach(testutils.cleanDatabase);
+    let populate = (callback) => {
+      testutils.connect((err, client) => {
+        let things = client.collection('things');
+        Async.series([
+          (next) => {
+            things.save({_id: 'sarah', age: 22}, next);
+          },
+          (next) => {
+            things.save({_id: 'mike', age: 20}, next);
+          },
+          (next) => {
+            things.save({_id: 'irene', age: 40}, next);
+          },
+        ], (err, results) => { callback(); });
+      });
+    };
+
+    it('should return null when no match', (done) => {
+      populate(() => {
+        testutils.connect((err, client) => {
+          let things = client.collection('things');
+          things.findOneById('nope', (err, doc) => {
+            should.equal(err, null);
+            should.equal(doc, null);
+            done();
+          });
+        });
+      });
+    });
+
+    it('should return the right doc', (done) => {
+      populate(() => {
+        testutils.connect((err, client) => {
+          let things = client.collection('things');
+          things.findOneById('mike', (err, doc) => {
+            should.equal(err, null);
+            should.deepEqual(doc, {_id: 'mike', age: 20});
+            done();
+          });
+        });
+      });
+    });
+  });
+
+  describe('BedquiltCollection#findOne()', () => {
+    beforeEach(testutils.cleanDatabase);
+    afterEach(testutils.cleanDatabase);
+    let populate = (callback) => {
+      testutils.connect((err, client) => {
+        let things = client.collection('things');
+        Async.series([
+          (next) => {
+            things.save({_id: 'sarah', age: 22}, next);
+          },
+          (next) => {
+            things.save({_id: 'mike', age: 20}, next);
+          },
+          (next) => {
+            things.save({_id: 'irene', age: 40}, next);
+          },
+        ], (err, results) => { callback(); });
+      });
+    };
+
+    it('should return null when no match', (done) => {
+      populate(() => {
+        testutils.connect((err, client) => {
+          let things = client.collection('things');
+          things.findOne({age: 99}, (err, doc) => {
+            should.equal(err, null);
+            should.equal(doc, null);
+            done();
+          });
+        });
+      });
+    });
+
+    it('should return the right doc', (done) => {
+      populate(() => {
+        testutils.connect((err, client) => {
+          let things = client.collection('things');
+          things.findOne({age: 20}, (err, doc) => {
+            should.equal(err, null);
+            should.deepEqual(doc, {_id: 'mike', age: 20});
+            done();
+          });
+        });
+      });
+    });
+  });
+
   describe('BedquiltCollection#count()', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
