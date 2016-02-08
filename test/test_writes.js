@@ -26,26 +26,23 @@ describe('BedquiltCollection write ops', () => {
     it('should remove documents from collection', (done) => {
       testutils.connect((err, client) => {
         var things = client.collection('things');
-
-        Async.series([
-          function(callback) {
-            things.insert({tag: 'aa'}, callback);
-          },
-          function(callback) {
-            things.insert({tag: 'bb'}, callback);
-          },
-          function(callback) {
-            things.insert({tag: 'aa'}, callback);
-          },
-        ], function(err, results) {
-          things.remove({tag: 'aa'}, (err, result) => {
-            should.equal(result, 2);
-            things.count({}, (err, result) => {
-              should.equal(1, result);
-              done();
+        Async.series(
+          [{tag: 'aa'},
+           {tag: 'bb'},
+           {tag: 'aa'}].map(
+             (doc) =>
+               (next) => things.insert(doc, next)
+           ),
+          (err, results) => {
+            things.remove({tag: 'aa'}, (err, result) => {
+              should.equal(result, 2);
+              things.count({}, (err, result) => {
+                should.equal(1, result);
+                done();
+              });
             });
-          });
-        });
+          }
+        );
       });
     });
   });
@@ -67,29 +64,26 @@ describe('BedquiltCollection write ops', () => {
     it('should remove documents from collection', (done) => {
       testutils.connect((err, client) => {
         var things = client.collection('things');
-
-        Async.series([
-          function(callback) {
-            things.insert({tag: 'aa'}, callback);
-          },
-          function(callback) {
-            things.insert({tag: 'bb'}, callback);
-          },
-          function(callback) {
-            things.insert({tag: 'aa'}, callback);
-          },
-        ], function(err, results) {
-          things.removeOne({tag: 'aa'}, (err, result) => {
-            should.equal(result, 1);
-            things.count({}, (err, result) => {
-              should.equal(2, result);
-              things.count({tag: 'aa'}, (err, result) => {
-                should.equal(1, result);
-                done();
+        Async.series(
+          [{tag: 'aa'},
+           {tag: 'bb'},
+           {tag: 'aa'}].map(
+             (doc) =>
+               (next) => things.insert(doc, next)
+           ),
+          (err, results) => {
+            things.removeOne({tag: 'aa'}, (err, result) => {
+              should.equal(result, 1);
+              things.count({}, (err, result) => {
+                should.equal(2, result);
+                things.count({tag: 'aa'}, (err, result) => {
+                  should.equal(1, result);
+                  done();
+                });
               });
             });
-          });
-        });
+          }
+        );
       });
     });
   });
@@ -113,33 +107,29 @@ describe('BedquiltCollection write ops', () => {
       testutils.connect((err, client) => {
         var things = client.collection('things');
 
-        Async.series([
-          function(callback) {
-            things.insert({_id: 'one', tag: 'aa'}, callback);
-          },
-          function(callback) {
-            things.insert({_id: 'two', tag: 'bb'}, callback);
-          },
-          function(callback) {
-            things.insert({_id: 'three', tag: 'aa'}, callback);
-          },
-        ], function(err, results) {
-          things.removeOneById('one', (err, result) => {
-            should.equal(result, 1);
-            things.count({}, (err, result) => {
-              should.equal(2, result);
-              things.count({tag: 'aa'}, (err, result) => {
-                should.equal(1, result);
-                done();
+        Async.series(
+          [{_id: 'one', tag: 'aa'},
+           {_id: 'two', tag: 'bb'},
+           {_id: 'three', tag: 'aa'}].map(
+             (doc) =>
+               (next) => things.insert(doc, next)
+           ),
+          (err, results) => {
+            things.removeOneById('one', (err, result) => {
+              should.equal(result, 1);
+              things.count({}, (err, result) => {
+                should.equal(2, result);
+                things.count({tag: 'aa'}, (err, result) => {
+                  should.equal(1, result);
+                  done();
+                });
               });
             });
-          });
-        });
+          }
+        );
       });
     });
   });
-
-
 
   describe('BedquiltCollection#insert()', () => {
     beforeEach(testutils.cleanDatabase);
@@ -198,13 +188,13 @@ describe('BedquiltCollection write ops', () => {
         things.save(doc, (err, result) => {
           var _id = result;
           things.findOneById(_id, (err, result) => {
-            should.notEqual(result['tag'], 'aaa');
-            result['tag'] = 'aaa';
+            should.notEqual(result.tag, 'aaa');
+            result.tag = 'aaa';
             things.save(result, (err, result) => {
               should.equal(err, null);
               should.equal('spanner', result);
               things.findOneById(result, function(err, spanner) {
-                should.equal(spanner['tag'], 'aaa');
+                should.equal(spanner.tag, 'aaa');
                 done();
               });
             });
