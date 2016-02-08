@@ -3,39 +3,28 @@
 /*global require, describe, it, before, beforeEach, after, afterEach */
 "use strict";
 
-var should = require("should");
-var testutils = require('./testutils.js');
-var Async = require('async');
+let should = require("should");
+let testutils = require('./testutils.js');
+let Async = require('async');
 
 let populate = (callback) => {
   testutils.connect((err, client) => {
-  var things = client.collection('things');
-  Async.series([
-    (cb) => {
-      things.save({name: 'sarah', age: 22}, cb);
-    },
-    (cb) => {
-      things.save({name: 'mike', age: 20}, cb);
-    },
-    (cb) => {
-      things.save({name: 'irene', age: 40}, cb);
-    },
-    (cb) => {
-      things.save({name: 'mary', age: 16}, cb);
-    },
-    (cb) => {
-      things.save({name: 'brian', age: 31}, cb);
-    },
-    (cb) => {
-      things.save({name: 'dave', age: 22}, cb);
-    },
-    (cb) => {
-      things.save({name: 'kate', age: 25}, cb);
-    },
-    (cb) => {
-      things.save({name: 'alice', age: 57}, cb);
-    }
-    ], (err, results) => { callback(); });
+    let things = client.collection('things');
+    Async.series(
+      [{name: 'sarah', age: 22},
+       {name: 'mike', age: 20},
+       {name: 'irene', age: 40},
+       {name: 'mary', age: 16},
+       {name: 'brian', age: 31},
+       {name: 'dave', age: 22},
+       {name: 'kate', age: 25},
+       {name: 'alice', age: 57}].map(
+         (doc) =>
+           (next) => things.save(doc, next)
+       ),
+      (err, results) =>
+        callback()
+    );
   });
 };
 

@@ -17,32 +17,21 @@ describe('BedquiltCollection find ops', () => {
     let populate = (callback) => {
       testutils.connect((err, client) => {
         let things = client.collection('things');
-        Async.series([
-          (next) => {
-            things.save({name: 'sarah', age: 22}, next);
-          },
-          (next) => {
-            things.save({name: 'mike', age: 20}, next);
-          },
-          (next) => {
-            things.save({name: 'irene', age: 40}, next);
-          },
-          (next) => {
-            things.save({name: 'mary', age: 16}, next);
-          },
-          (next) => {
-            things.save({name: 'brian', age: 31}, next);
-          },
-          (next) => {
-            things.save({name: 'dave', age: 22}, next);
-          },
-          (next) => {
-            things.save({name: 'kate', age: 25}, next);
-          },
-          (next) => {
-            things.save({name: 'alice', age: 57}, next);
-          }
-        ], (err, results) => { callback(); });
+        Async.series(
+          [{name: 'sarah', age: 22},
+           {name: 'mike', age: 20},
+           {name: 'irene', age: 40},
+           {name: 'mary', age: 16},
+           {name: 'brian', age: 31},
+           {name: 'dave', age: 22},
+           {name: 'kate', age: 25},
+           {name: 'alice', age: 57}].map(
+             (doc) =>
+               (next) => things.save(doc, next)
+           ),
+          (err, results) =>
+            callback()
+        );
       });
     };
     let names = function(docs) {
@@ -216,17 +205,15 @@ describe('BedquiltCollection find ops', () => {
     let populate = (callback) => {
       testutils.connect((err, client) => {
         let things = client.collection('things');
-        Async.series([
-          (next) => {
-            things.save({_id: 'sarah', age: 22}, next);
-          },
-          (next) => {
-            things.save({_id: 'mike', age: 20}, next);
-          },
-          (next) => {
-            things.save({_id: 'irene', age: 40}, next);
-          },
-        ], (err, results) => { callback(); });
+        Async.series(
+          [{_id: 'sarah', age: 22},
+           {_id: 'mike', age: 20},
+           {_id: 'irene', age: 40}].map(
+             (doc) =>
+               (next) => things.save(doc, next)
+           ),
+          (err, results) => callback()
+        );
       });
     };
 
@@ -263,17 +250,15 @@ describe('BedquiltCollection find ops', () => {
     let populate = (callback) => {
       testutils.connect((err, client) => {
         let things = client.collection('things');
-        Async.series([
-          (next) => {
-            things.save({_id: 'sarah', age: 22}, next);
-          },
-          (next) => {
-            things.save({_id: 'mike', age: 20}, next);
-          },
-          (next) => {
-            things.save({_id: 'irene', age: 40}, next);
-          },
-        ], (err, results) => { callback(); });
+        Async.series(
+          [{_id: 'sarah', age: 22},
+           {_id: 'mike', age: 20},
+           {_id: 'irene', age: 40}].map(
+             (doc) =>
+               (next) => things.save(doc, next)
+           ),
+          (err, results) => callback()
+        );
       });
     };
 
@@ -310,32 +295,21 @@ describe('BedquiltCollection find ops', () => {
     let populate = (callback) => {
       testutils.connect((err, client) => {
         let things = client.collection('things');
-        Async.series([
-          (next) => {
-            things.save({_id: 'sarah', age: 22}, next);
-          },
-          (next) => {
-            things.save({_id: 'mike', age: 20}, next);
-          },
-          (next) => {
-            things.save({_id: 'irene', age: 40}, next);
-          },
-          (next) => {
-            things.save({_id: 'mary', age: 16}, next);
-          },
-          (next) => {
-            things.save({_id: 'brian', age: 31}, next);
-          },
-          (next) => {
-            things.save({_id: 'dave', age: 22}, next);
-          },
-          (next) => {
-            things.save({_id: 'kate', age: 25}, next);
-          },
-          (next) => {
-            things.save({_id: 'alice', age: 57}, next);
-          }
-        ], (err, results) => { callback(); });
+        Async.series(
+          [{_id: 'sarah', age: 22},
+           {_id: 'mike', age: 20},
+           {_id: 'irene', age: 40},
+           {_id: 'mary', age: 16},
+           {_id: 'brian', age: 31},
+           {_id: 'dave', age: 22},
+           {_id: 'kate', age: 25},
+           {_id: 'alice', age: 57}].map(
+             (doc) =>
+               (next) => things.save(doc, next)
+           ),
+          (err, results) =>
+            callback()
+        );
       });
     };
 
@@ -389,17 +363,10 @@ describe('BedquiltCollection find ops', () => {
       testutils.connect((err, client) => {
         let things = client.collection('things');
         Async.series(
-          [
-            function(callback) {
-              things.insert({}, callback);
-            },
-            function(callback) {
-              things.insert({}, callback);
-            },
-            function(callback) {
-              things.insert({}, callback);
-            }
-          ],
+          [{},
+           {},
+           {}
+          ].map((doc) => (next) => things.save(doc, next)),
           function(err, results) {
             things.count({}, (err, result) => {
               should.equal(3, result);
@@ -431,16 +398,10 @@ describe('BedquiltCollection find ops', () => {
         let things = client.collection('things');
         Async.series(
           [
-            function(callback) {
-              things.insert({name: 'aa'}, callback);
-            },
-            function(callback) {
-              things.insert({name: 'bb'}, callback);
-            },
-            function(callback) {
-              things.insert({name: 'aa'}, callback);
-            }
-          ],
+            {name: 'aa'},
+            {name: 'bb'},
+            {name: 'aa'}
+          ].map((doc) => (next) => things.save(doc, next)),
           function(err, results) {
             things.distinct('name', (err, result) => {
               should.equal(err, null);
@@ -491,23 +452,18 @@ describe('BedquiltCollection find ops', () => {
           }
           testutils.connect((err, client) => {
             let things = client.collection('things');
-            Async.series([
-                function(callback) {
-                things.save({_id: 'one', tag: 'aa'}, callback);
-                },
-                function(callback) {
-                things.save({_id: 'two', tag: 'bb'}, callback);
-                },
-                function(callback) {
-                things.save({_id: 'three', tag: 'cc'}, callback);
-                },
-                function(callback) {
-                things.save({_id: 'four', tag: 'dd'}, callback);
-                },
-                function(callback) {
-                things.save({_id: 'five', tag: 'aa'}, callback);
-                }
-            ], function(err, results) { done(); });
+            Async.series(
+              [{_id: 'one', tag: 'aa'},
+               {_id: 'two', tag: 'bb'},
+               {_id: 'three', tag: 'cc'},
+               {_id: 'four', tag: 'dd'},
+               {_id: 'five', tag: 'aa'}].map(
+                 (doc) =>
+                   (next) => things.save(doc, next)
+               ),
+              (err, results) =>
+                done()
+            );
           });
         });
       });

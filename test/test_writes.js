@@ -3,9 +3,9 @@
 /*global require, describe, it, before, beforeEach, after, afterEach */
 "use strict";
 
-var should = require("should");
-var testutils = require('./testutils.js');
-var Async = require('async');
+let should = require("should");
+let testutils = require('./testutils.js');
+let Async = require('async');
 
 describe('BedquiltCollection write ops', () => {
 
@@ -15,7 +15,7 @@ describe('BedquiltCollection write ops', () => {
 
     it('should do nothing on empty collection', (done) => {
       testutils.connect((err, client) => {
-        var things = client.collection('things');
+        let things = client.collection('things');
         things.remove({tag: 'aa'}, (err, result) => {
           should.equal(result, 0);
           done();
@@ -25,7 +25,7 @@ describe('BedquiltCollection write ops', () => {
 
     it('should remove documents from collection', (done) => {
       testutils.connect((err, client) => {
-        var things = client.collection('things');
+        let things = client.collection('things');
         Async.series(
           [{tag: 'aa'},
            {tag: 'bb'},
@@ -53,7 +53,7 @@ describe('BedquiltCollection write ops', () => {
 
     it('should do nothing on empty collection', (done) => {
       testutils.connect((err, client) => {
-        var things = client.collection('things');
+        let things = client.collection('things');
         things.removeOne({tag: 'aa'}, (err, result) => {
           should.equal(result, 0);
           done();
@@ -63,7 +63,7 @@ describe('BedquiltCollection write ops', () => {
 
     it('should remove documents from collection', (done) => {
       testutils.connect((err, client) => {
-        var things = client.collection('things');
+        let things = client.collection('things');
         Async.series(
           [{tag: 'aa'},
            {tag: 'bb'},
@@ -95,7 +95,7 @@ describe('BedquiltCollection write ops', () => {
 
     it('should do nothing on empty collection', (done) => {
       testutils.connect((err, client) => {
-        var things = client.collection('things');
+        let things = client.collection('things');
         things.removeOneById('one', (err, result) => {
           should.equal(result, 0);
           done();
@@ -105,7 +105,7 @@ describe('BedquiltCollection write ops', () => {
 
     it('should remove documents from collection', (done) => {
       testutils.connect((err, client) => {
-        var things = client.collection('things');
+        let things = client.collection('things');
 
         Async.series(
           [{_id: 'one', tag: 'aa'},
@@ -137,8 +137,8 @@ describe('BedquiltCollection write ops', () => {
 
     it('should return _id of document', (done) => {
       testutils.connect((err, client) => {
-        var things = client.collection('things');
-        var doc = {
+        let things = client.collection('things');
+        let doc = {
           _id: 'spanner',
           description: 'A small spanner'
         };
@@ -161,8 +161,8 @@ describe('BedquiltCollection write ops', () => {
 
     it('should return _id of document', (done) => {
       testutils.connect((err, client) => {
-        var things = client.collection('things');
-        var doc = {
+        let things = client.collection('things');
+        let doc = {
           _id: 'spanner',
           description: 'A small spanner'
         };
@@ -180,13 +180,13 @@ describe('BedquiltCollection write ops', () => {
 
     it('should update document in place', (done) => {
       testutils.connect((err, client) => {
-        var things = client.collection('things');
-        var doc = {
+        let things = client.collection('things');
+        let doc = {
           _id: 'spanner',
           description: 'A small spanner'
         };
         things.save(doc, (err, result) => {
-          var _id = result;
+          let _id = result;
           things.findOneById(_id, (err, result) => {
             should.notEqual(result.tag, 'aaa');
             result.tag = 'aaa';

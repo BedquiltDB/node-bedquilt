@@ -3,10 +3,10 @@
 /*global require, describe, it, before, beforeEach, after, afterEach */
 "use strict";
 
-var should = require("should");
-var BedquiltClient = require('../index.js').BedquiltClient;
-var testutils = require('./testutils.js');
-var Async = require('async');
+let should = require("should");
+let BedquiltClient = require('../index.js').BedquiltClient;
+let testutils = require('./testutils.js');
+let Async = require('async');
 
 describe('BedquiltClient', () => {
 

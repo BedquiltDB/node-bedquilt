@@ -3,9 +3,9 @@
 /*global require, describe, it, before, beforeEach, after, afterEach */
 "use strict";
 
-var should = require("should");
-var testutils = require('./testutils.js');
-var Async = require('async');
+let should = require("should");
+let testutils = require('./testutils.js');
+let Async = require('async');
 
 describe('BedquiltCollection constraint ops', () => {
 
@@ -15,8 +15,8 @@ describe('BedquiltCollection constraint ops', () => {
 
     it('should add a simple constraint', (done) => {
       testutils.connect((err, client) => {
-        var things = client.collection('things');
-        var constraints = {
+        let things = client.collection('things');
+        let constraints = {
           name: {$required: 1,
                  $notnull: 1}
         };
@@ -33,8 +33,8 @@ describe('BedquiltCollection constraint ops', () => {
 
     it('should work with a more complex constraint', (done) => {
       testutils.connect((err, client) => {
-        var people = client.collection('people');
-        var spec = {
+        let people = client.collection('people');
+        let spec = {
           name: {
             $required: 1,
             $notnull: 1,
@@ -69,8 +69,8 @@ describe('BedquiltCollection constraint ops', () => {
 
     it('should list all constraints', (done) => {
       testutils.connect((err, client) => {
-        var things = client.collection('things');
-        var constraints = {
+        let things = client.collection('things');
+        let constraints = {
           name: {$required: 1,
                  $notnull: 1}
         };
@@ -94,8 +94,8 @@ describe('BedquiltCollection constraint ops', () => {
 
     it('should remove constraints', (done) => {
       testutils.connect((err, client) => {
-        var things = client.collection('things');
-        var constraints = {
+        let things = client.collection('things');
+        let constraints = {
           name: {$required: 1,
                  $notnull: 1}
         };
