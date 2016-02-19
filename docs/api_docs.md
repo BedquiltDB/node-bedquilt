@@ -171,6 +171,20 @@ The callback function should take two parameters, `err` and `result`, where resu
 
 ----
 
+
+
+### `#findManyByIds`
+
+Params: `ids::Array[String]`, `callback::Function`
+
+Find several documents in the collection, which has an `_id` field in the supplied array of ids.
+The callback function should take two parameters, `err` and `result`, where result is an Array of Objects.
+
+----
+
+
+
+
 ### `#distinct`
 
 Params: `keyPath::String`, `callback::Function`
