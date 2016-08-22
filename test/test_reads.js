@@ -252,7 +252,7 @@ describe('BedquiltCollection find ops', () => {
         let things = client.collection('things');
         Async.series(
           [{_id: 'sarah', age: 22},
-           {_id: 'mike', age: 20},
+           {_id: "mike o'reilly", age: 20},
            {_id: 'irene', age: 40}].map(
              (doc) =>
                (next) => things.save(doc, next)
@@ -281,7 +281,20 @@ describe('BedquiltCollection find ops', () => {
           let things = client.collection('things');
           things.findOne({age: 20}, (err, doc) => {
             should.equal(err, null);
-            should.deepEqual(doc, {_id: 'mike', age: 20});
+            should.deepEqual(doc, {_id: "mike o'reilly", age: 20});
+            done();
+          });
+        });
+      });
+    });
+
+    it('should be ok with quotes', (done) => {
+      populate(() => {
+        testutils.connect((err, client) => {
+          let things = client.collection('things');
+          things.findOne({_id: "mike o'reilly"}, (err, doc) => {
+            should.equal(err, null);
+            should.deepEqual(doc, {_id: "mike o'reilly", age: 20});
             done();
           });
         });
