@@ -10,6 +10,78 @@ let Async = require('async');
 
 describe('BedquiltCollection find ops', () => {
 
+  describe('BedquiltCollection#findOne() with skip and sort', () => {
+    beforeEach(testutils.cleanDatabase);
+    afterEach(testutils.cleanDatabase);
+
+    let populate = (callback) => {
+      testutils.connect((err, client) => {
+        let things = client.collection('things');
+        Async.series(
+          [{name: 'sarah', age: 22},
+           {name: 'mike', age: 20},
+           {name: 'irene', age: 40},
+           {name: 'mary', age: 16},
+           {name: 'brian', age: 31},
+           {name: 'dave', age: 22},
+           {name: 'kate', age: 25},
+           {name: 'alice', age: 57}].map(
+             (doc) =>
+               (next) => things.save(doc, next)
+           ),
+          (err, results) =>
+            callback()
+        );
+      });
+    };
+    let names = function(docs) {
+      return docs.map((doc) => { return doc.name; });
+    };
+    let ages = function(docs) {
+      return docs.map((doc) => { return doc.age; });
+    };
+
+    it('should skip no documents', (done) => {
+      populate(() => {
+        testutils.connect((err, client) => {
+          let things = client.collection('things');
+          things.findOne({}, {sort: [{age: 1}]}, (err, result) => {
+            should.equal(err, null);
+            should.deepEqual(result.name, 'mary');
+            done();
+          });
+        });
+      });
+    });
+
+    it('should skip one document', (done) => {
+      populate(() => {
+        testutils.connect((err, client) => {
+          let things = client.collection('things');
+          things.findOne({}, {skip: 1, sort: [{age: 1}]}, (err, result) => {
+            should.equal(err, null);
+            should.deepEqual(result.name, 'mike');
+            done();
+          });
+        });
+      });
+    });
+
+    it('should skip four documents', (done) => {
+      populate(() => {
+        testutils.connect((err, client) => {
+          let things = client.collection('things');
+          things.findOne({}, {skip: 4, sort: [{age: 1}]}, (err, result) => {
+            should.equal(err, null);
+            should.deepEqual(result.name, 'kate');
+            done();
+          });
+        });
+      });
+    });
+
+  });
+
   describe('BedquiltCollection#find() with skip, limit and sort', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
