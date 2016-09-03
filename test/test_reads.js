@@ -67,6 +67,19 @@ describe('BedquiltCollection find ops', () => {
       });
     });
 
+    it('should skip one document, age descending', (done) => {
+      populate(() => {
+        testutils.connect((err, client) => {
+          let things = client.collection('things');
+          things.findOne({}, {skip: 1, sort: [{age: -1}]}, (err, result) => {
+            should.equal(err, null);
+            should.deepEqual(result.name, 'irene');
+            done();
+          });
+        });
+      });
+    });
+
     it('should skip four documents', (done) => {
       populate(() => {
         testutils.connect((err, client) => {
