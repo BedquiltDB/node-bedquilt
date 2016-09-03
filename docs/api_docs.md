@@ -153,10 +153,15 @@ See `BedquiltQuery` below for more details.
 
 ### `#findOne`
 
-Params: `queryDoc::Object`, `callback::Function`
+Params: `queryDoc::Object`, `options::Object (optional)` `callback::Function`
 
 Find a single document in the collection, matching the supplied query document.
 The callback function should take two parameters, `err` and `result`, where result is an Object.
+
+The options object may contain the following fields:
+
+- `sort`: Array of sort specs, example: `{sort: [{lastUpdate: 1, name: -1}]`
+- `skip`: Number of documents to skip, default 0
 
 ----
 
