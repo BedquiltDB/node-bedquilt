@@ -29,6 +29,19 @@ BedquiltClient.connect('postgres://localhost/test', function(err, client) {
     console.log('Added Sarah to the people collection with _id: ' + result);
   });
 
+  people.find({age: {'$gte': 50, '$lte': 70}}, function(err, result) {
+    console.log('Users between 50 and 70: ' + result.length)
+  });
+
+  // streaming
+  cursor = people.find({city: {'$in': ['Edinburgh', 'Glasgow']}})
+  cursor.on('row', function(person) {
+    console.log('Someone from Scotland: ' + person.name)
+  });
+  cursor.on('end', function() {
+    console.log('done');
+  });
+
 });
 ```
 
