@@ -126,6 +126,42 @@ describe('BedquiltCollection find ops', () => {
       return docs.map((doc) => { return doc.age; });
     };
 
+    describe('$created and $updated sorts', () => {
+      it('should sort by $created', (done) => {
+        populate(() => {
+          testutils.connect((err, client) => {
+            let things = client.collection('things');
+            things.find({}, {limit: 2, sort: [{'$created': -1}]}, (err, result) => {
+              should.equal(err, null);
+              should.deepEqual(names(result), ['alice', 'kate']);
+              things.find({}, {limit: 2, sort: [{'$created': 1}]}, (err, result) => {
+                should.equal(err, null);
+                should.deepEqual(names(result), ['sarah', 'mike']);
+                done();
+              });
+            });
+          });
+        });
+      });
+
+      it('should sort by $updated', (done) => {
+        populate(() => {
+          testutils.connect((err, client) => {
+            let things = client.collection('things');
+            things.find({}, {limit: 2, sort: [{'$updated': -1}]}, (err, result) => {
+              should.equal(err, null);
+              should.deepEqual(names(result), ['alice', 'kate']);
+              things.find({}, {limit: 2, sort: [{'$updated': 1}]}, (err, result) => {
+                should.equal(err, null);
+                should.deepEqual(names(result), ['sarah', 'mike']);
+                done();
+              });
+            });
+          });
+        });
+      });
+    });
+
     it('should skip two documents', (done) => {
       populate(() => {
         testutils.connect((err, client) => {
