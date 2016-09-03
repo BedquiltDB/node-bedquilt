@@ -542,7 +542,7 @@ describe('BedquiltCollection find ops', () => {
       });
     });
 
-    describe('empty query doc', () => {
+    describe('with docs', () => {
       beforeEach((done) => {
         testutils.cleanDatabase((err, result) => {
           if(err) {
@@ -617,6 +617,23 @@ describe('BedquiltCollection find ops', () => {
               {_id: 'five', tag: 'aa'}
             ], result);
             done();
+          });
+        });
+      });
+
+      describe('with advanced queries', () => {
+        it('should get the right docs', (done) => {
+          testutils.connect((err, client) => {
+            let things = client.collection('things');
+            things.find({tag: {$eq: 'aa'}}, (err, result) => {
+              should.equal(err, null);
+              should.equal(result.length, 2);
+              should.deepEqual([
+                {_id: 'one', tag: 'aa'},
+                {_id: 'five', tag: 'aa'}
+              ], result);
+              done();
+            });
           });
         });
       });
