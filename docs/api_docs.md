@@ -175,6 +175,14 @@ Params: `id::String`, `callback::Function`
 Find a single document in the collection, which has an `_id` field matching the supplied id string.
 The callback function should take two parameters, `err` and `result`, where result is an Object.
 
+
+### `#findManyByIds`
+
+Params: `ids::Array[String]`, `callback::Function`
+
+Find many documents, by their `_id` fields.
+The callback function should take two parameters, `err` and `result`, where result is an Array of Objects.
+
 ----
 
 ### `#distinct`
@@ -210,8 +218,7 @@ the number of documents removed.
 Params: `queryDoc::Object`, `callback::Function`
 
 Remove a single document from the collection, matching the supplied query document.
-The callback function should take two parameters, `err` and `result`, where result is a Number indicating
-the number of documents removed.
+The callback function should take two parameters, `err` and `result`, where result is a Number indicating the number of documents removed.
 
 ----
 
@@ -221,10 +228,19 @@ the number of documents removed.
 Params: `id::String`, `callback::Function`
 
 Remove a single document from the collection, which has an `_id` field matching the supplied id string.
-The callback function should take two parameters, `err` and `result`, where result is a Number indicating
-the number of documents removed.
+The callback function should take two parameters, `err` and `result`, where result is a Number indicating the number of documents removed, either `0` or `1`.
 
 ----
+
+
+### `#removeManyByIds`
+
+Params: `ids::Array[String]`, `callback::Function`
+
+Remove many documents from a collection, by their `_id` fields.
+The callback function should take two parameters, `err` and `result`, where result is a Number indicating the number of documents removed, either `0` or `1`.
+
+
 
 ## `BedquiltQuery`
 
