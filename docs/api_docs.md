@@ -245,7 +245,7 @@ The callback function should take two parameters, `err` and `result`, where resu
 ## `BedquiltQuery`
 
 An event-emitter representing a query in progress. Returned from all query operations,
-but only useful when returned from the `BedquiltCollection#find` method.
+but only useful when returned from the `BedquiltCollection#find` and `BedquiltCollection#findManyByIds` methods.
 
 ### Events
 
@@ -261,5 +261,18 @@ Emitted when an error is encountered
 
 Emitted when all rows have been retrieved. The result is an array of values, equivalent
 to the result that would be passed to a query callback.
+
+Example:
+
+```javascript
+query = things.find({'type': 'tool'})
+query.on('row', (row) => {
+    console.log('>> got a row');
+    console.log(row); // -> {_id: 'abcd', ...'};
+});
+query.on('end', (result) => {
+    console.log('>> done');
+});
+```
 
 ----
