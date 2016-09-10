@@ -5,13 +5,14 @@ The nodejs driver for [BedquiltDB](http://bedquiltdb.github.io)
 
 Requires `node` >= 4.0.0
 
+[![CircleCI](https://circleci.com/gh/BedquiltDB/node-bedquilt.svg?style=svg)](https://circleci.com/gh/BedquiltDB/node-bedquilt)
+
 
 ## Install
 
 ```
 $ npm install bedquilt --save
 ```
-
 
 ## Getting Started
 
