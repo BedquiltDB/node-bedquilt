@@ -28,4 +28,4 @@ database:
 
 test:
   override:
-    - sudo make test
+    - make test
