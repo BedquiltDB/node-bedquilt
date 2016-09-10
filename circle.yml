@@ -17,6 +17,7 @@ dependencies:
     - sudo apt-get install postgresql-common
     - sudo apt-get install postgresql-plpython3-9.5
     - sudo pip install jinja2
+  override:
     - npm install
 
 database:
