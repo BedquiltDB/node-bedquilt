@@ -1,6 +1,7 @@
 # API Documentation
 
 This document describes the `node-bedquilt` api.
+See the [BedquiltDB Guide](https://bedquiltdb.readthedocs.org/en/latest/guide) for more comprehensive documentation of the BedquiltDB system.
 
 ----
 
