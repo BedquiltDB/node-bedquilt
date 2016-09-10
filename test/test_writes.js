@@ -131,6 +131,50 @@ describe('BedquiltCollection write ops', () => {
     });
   });
 
+  describe('BedquiltCollection#removeManyByIds()', () => {
+    beforeEach(testutils.cleanDatabase);
+    afterEach(testutils.cleanDatabase);
+
+    it('should do nothing on empty collection', (done) => {
+      testutils.connect((err, client) => {
+        let things = client.collection('things');
+        things.removeManyByIds(['one', 'three'], (err, result) => {
+          should.equal(result, 0);
+          done();
+        });
+      });
+    });
+
+    it('should remove documents from collection', (done) => {
+      testutils.connect((err, client) => {
+        let things = client.collection('things');
+
+        Async.series(
+          [{_id: 'one', tag: 'aa'},
+           {_id: 'two', tag: 'bb'},
+           {_id: 'three', tag: 'aa'}].map(
+             (doc) =>
+               (next) => things.insert(doc, next)
+           ),
+          (err, results) => {
+            things.removeManyByIds(['one', 'three'], (err, result) => {
+              should.equal(err, null);
+              should.equal(result, 2);
+              things.count({}, (err, result) => {
+                should.equal(1, result);
+                things.count({tag: 'aa'}, (err, result) => {
+                  should.equal(0, result);
+                  done();
+                });
+              });
+            });
+          }
+        );
+      });
+    });
+  });
+
+
   describe('BedquiltCollection#insert()', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
