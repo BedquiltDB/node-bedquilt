@@ -10,6 +10,91 @@ let Async = require('async');
 
 describe('BedquiltCollection find ops', () => {
 
+  describe('BedquiltCollection#findOne() with skip and sort', () => {
+    beforeEach(testutils.cleanDatabase);
+    afterEach(testutils.cleanDatabase);
+
+    let populate = (callback) => {
+      testutils.connect((err, client) => {
+        let things = client.collection('things');
+        Async.series(
+          [{name: 'sarah', age: 22},
+           {name: 'mike', age: 20},
+           {name: 'irene', age: 40},
+           {name: 'mary', age: 16},
+           {name: 'brian', age: 31},
+           {name: 'dave', age: 22},
+           {name: 'kate', age: 25},
+           {name: 'alice', age: 57}].map(
+             (doc) =>
+               (next) => things.save(doc, next)
+           ),
+          (err, results) =>
+            callback()
+        );
+      });
+    };
+    let names = function(docs) {
+      return docs.map((doc) => { return doc.name; });
+    };
+    let ages = function(docs) {
+      return docs.map((doc) => { return doc.age; });
+    };
+
+    it('should skip no documents', (done) => {
+      populate(() => {
+        testutils.connect((err, client) => {
+          let things = client.collection('things');
+          things.findOne({}, {sort: [{age: 1}]}, (err, result) => {
+            should.equal(err, null);
+            should.deepEqual(result.name, 'mary');
+            done();
+          });
+        });
+      });
+    });
+
+    it('should skip one document', (done) => {
+      populate(() => {
+        testutils.connect((err, client) => {
+          let things = client.collection('things');
+          things.findOne({}, {skip: 1, sort: [{age: 1}]}, (err, result) => {
+            should.equal(err, null);
+            should.deepEqual(result.name, 'mike');
+            done();
+          });
+        });
+      });
+    });
+
+    it('should skip one document, age descending', (done) => {
+      populate(() => {
+        testutils.connect((err, client) => {
+          let things = client.collection('things');
+          things.findOne({}, {skip: 1, sort: [{age: -1}]}, (err, result) => {
+            should.equal(err, null);
+            should.deepEqual(result.name, 'irene');
+            done();
+          });
+        });
+      });
+    });
+
+    it('should skip four documents', (done) => {
+      populate(() => {
+        testutils.connect((err, client) => {
+          let things = client.collection('things');
+          things.findOne({}, {skip: 4, sort: [{age: 1}]}, (err, result) => {
+            should.equal(err, null);
+            should.deepEqual(result.name, 'kate');
+            done();
+          });
+        });
+      });
+    });
+
+  });
+
   describe('BedquiltCollection#find() with skip, limit and sort', () => {
     beforeEach(testutils.cleanDatabase);
     afterEach(testutils.cleanDatabase);
@@ -40,6 +125,42 @@ describe('BedquiltCollection find ops', () => {
     let ages = function(docs) {
       return docs.map((doc) => { return doc.age; });
     };
+
+    describe('$created and $updated sorts', () => {
+      it('should sort by $created', (done) => {
+        populate(() => {
+          testutils.connect((err, client) => {
+            let things = client.collection('things');
+            things.find({}, {limit: 2, sort: [{'$created': -1}]}, (err, result) => {
+              should.equal(err, null);
+              should.deepEqual(names(result), ['alice', 'kate']);
+              things.find({}, {limit: 2, sort: [{'$created': 1}]}, (err, result) => {
+                should.equal(err, null);
+                should.deepEqual(names(result), ['sarah', 'mike']);
+                done();
+              });
+            });
+          });
+        });
+      });
+
+      it('should sort by $updated', (done) => {
+        populate(() => {
+          testutils.connect((err, client) => {
+            let things = client.collection('things');
+            things.find({}, {limit: 2, sort: [{'$updated': -1}]}, (err, result) => {
+              should.equal(err, null);
+              should.deepEqual(names(result), ['alice', 'kate']);
+              things.find({}, {limit: 2, sort: [{'$updated': 1}]}, (err, result) => {
+                should.equal(err, null);
+                should.deepEqual(names(result), ['sarah', 'mike']);
+                done();
+              });
+            });
+          });
+        });
+      });
+    });
 
     it('should skip two documents', (done) => {
       populate(() => {
@@ -252,7 +373,7 @@ describe('BedquiltCollection find ops', () => {
         let things = client.collection('things');
         Async.series(
           [{_id: 'sarah', age: 22},
-           {_id: 'mike', age: 20},
+           {_id: "mike o'reilly", age: 20},
            {_id: 'irene', age: 40}].map(
              (doc) =>
                (next) => things.save(doc, next)
@@ -281,7 +402,20 @@ describe('BedquiltCollection find ops', () => {
           let things = client.collection('things');
           things.findOne({age: 20}, (err, doc) => {
             should.equal(err, null);
-            should.deepEqual(doc, {_id: 'mike', age: 20});
+            should.deepEqual(doc, {_id: "mike o'reilly", age: 20});
+            done();
+          });
+        });
+      });
+    });
+
+    it('should be ok with quotes', (done) => {
+      populate(() => {
+        testutils.connect((err, client) => {
+          let things = client.collection('things');
+          things.findOne({_id: "mike o'reilly"}, (err, doc) => {
+            should.equal(err, null);
+            should.deepEqual(doc, {_id: "mike o'reilly", age: 20});
             done();
           });
         });
@@ -444,7 +578,7 @@ describe('BedquiltCollection find ops', () => {
       });
     });
 
-    describe('empty query doc', () => {
+    describe('with docs', () => {
       beforeEach((done) => {
         testutils.cleanDatabase((err, result) => {
           if(err) {
@@ -519,6 +653,23 @@ describe('BedquiltCollection find ops', () => {
               {_id: 'five', tag: 'aa'}
             ], result);
             done();
+          });
+        });
+      });
+
+      describe('with advanced queries', () => {
+        it('should get the right docs', (done) => {
+          testutils.connect((err, client) => {
+            let things = client.collection('things');
+            things.find({tag: {$eq: 'aa'}}, (err, result) => {
+              should.equal(err, null);
+              should.equal(result.length, 2);
+              should.deepEqual([
+                {_id: 'one', tag: 'aa'},
+                {_id: 'five', tag: 'aa'}
+              ], result);
+              done();
+            });
           });
         });
       });

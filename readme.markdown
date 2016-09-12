@@ -5,13 +5,14 @@ The nodejs driver for [BedquiltDB](http://bedquiltdb.github.io)
 
 Requires `node` >= 4.0.0
 
+[![CircleCI](https://circleci.com/gh/BedquiltDB/node-bedquilt.svg?style=svg)](https://circleci.com/gh/BedquiltDB/node-bedquilt)
+
 
 ## Install
 
 ```
 $ npm install bedquilt --save
 ```
-
 
 ## Getting Started
 
@@ -27,6 +28,19 @@ BedquiltClient.connect('postgres://localhost/test', function(err, client) {
 
   people.insert({name: "Sarah", age: 45}, function(err, result) {
     console.log('Added Sarah to the people collection with _id: ' + result);
+  });
+
+  people.find({age: {'$gte': 50, '$lte': 70}}, function(err, result) {
+    console.log('Users between 50 and 70: ' + result.length)
+  });
+
+  // streaming
+  cursor = people.find({city: {'$in': ['Edinburgh', 'Glasgow']}})
+  cursor.on('row', function(person) {
+    console.log('Someone from Scotland: ' + person.name)
+  });
+  cursor.on('end', function() {
+    console.log('done');
   });
 
 });

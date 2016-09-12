@@ -1,6 +1,7 @@
 # API Documentation
 
 This document describes the `node-bedquilt` api.
+See the [BedquiltDB Guide](https://bedquiltdb.readthedocs.org/en/latest/guide) for more comprehensive documentation of the BedquiltDB system.
 
 ----
 
@@ -153,10 +154,15 @@ See `BedquiltQuery` below for more details.
 
 ### `#findOne`
 
-Params: `queryDoc::Object`, `callback::Function`
+Params: `queryDoc::Object`, `options::Object (optional)` `callback::Function`
 
 Find a single document in the collection, matching the supplied query document.
 The callback function should take two parameters, `err` and `result`, where result is an Object.
+
+The options object may contain the following fields:
+
+- `sort`: Array of sort specs, example: `{sort: [{lastUpdate: 1, name: -1}]`
+- `skip`: Number of documents to skip, default 0
 
 ----
 
@@ -168,6 +174,14 @@ Params: `id::String`, `callback::Function`
 
 Find a single document in the collection, which has an `_id` field matching the supplied id string.
 The callback function should take two parameters, `err` and `result`, where result is an Object.
+
+
+### `#findManyByIds`
+
+Params: `ids::Array[String]`, `callback::Function`
+
+Find many documents, by their `_id` fields.
+The callback function should take two parameters, `err` and `result`, where result is an Array of Objects.
 
 ----
 
@@ -218,8 +232,7 @@ the number of documents removed.
 Params: `queryDoc::Object`, `callback::Function`
 
 Remove a single document from the collection, matching the supplied query document.
-The callback function should take two parameters, `err` and `result`, where result is a Number indicating
-the number of documents removed.
+The callback function should take two parameters, `err` and `result`, where result is a Number indicating the number of documents removed.
 
 ----
 
@@ -229,15 +242,24 @@ the number of documents removed.
 Params: `id::String`, `callback::Function`
 
 Remove a single document from the collection, which has an `_id` field matching the supplied id string.
-The callback function should take two parameters, `err` and `result`, where result is a Number indicating
-the number of documents removed.
+The callback function should take two parameters, `err` and `result`, where result is a Number indicating the number of documents removed, either `0` or `1`.
 
 ----
+
+
+### `#removeManyByIds`
+
+Params: `ids::Array[String]`, `callback::Function`
+
+Remove many documents from a collection, by their `_id` fields.
+The callback function should take two parameters, `err` and `result`, where result is a Number indicating the number of documents removed, either `0` or `1`.
+
+
 
 ## `BedquiltQuery`
 
 An event-emitter representing a query in progress. Returned from all query operations,
-but only useful when returned from the `BedquiltCollection#find` method.
+but only useful when returned from the `BedquiltCollection#find` and `BedquiltCollection#findManyByIds` methods.
 
 ### Events
 
@@ -253,5 +275,18 @@ Emitted when an error is encountered
 
 Emitted when all rows have been retrieved. The result is an array of values, equivalent
 to the result that would be passed to a query callback.
+
+Example:
+
+```javascript
+query = things.find({'type': 'tool'})
+query.on('row', (row) => {
+    console.log('>> got a row');
+    console.log(row); // -> {_id: 'abcd', ...'};
+});
+query.on('end', (result) => {
+    console.log('>> done');
+});
+```
 
 ----
